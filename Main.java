@@ -2,7 +2,14 @@ import java.io.*;
 import java.util.*;
 /*
 Group 8
+<<<<<<< HEAD
 Sophia S 10.25.21
+=======
+Sophia S
+Jessica B
+Alex M
+George O
+>>>>>>> origin/master
 */
 
 public class main{
