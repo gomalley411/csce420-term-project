@@ -3,12 +3,11 @@ import java.io.*;
 import java.util.*;
 
 public class Process{
-    /**Sophia S. Last Modified Date: 10/22/21 */
+    /**Sophia S. Last Modified Date: 10/25/21 */
    private int pnum; //process number
    private int burst;
    private int arrival;
    private int exit; //exit time
-   private String status;
    private int pri; //priority
 
    public Process(){
@@ -18,21 +17,19 @@ public class Process{
        this.burst = 0;
        this.arrival = 0;
        this.exit = 0;
-       this.status = "none";
        this.pri = 0;
    }
 
-   public Process(int p, int b, int a, int e, String s, int c){
-       /**Sophia S. Last Modified Date: 10/22/21 */
+   public Process(int p, int b, int a, int e, int c){
+       /**Sophia S. Last Modified Date: 10/25/21 */
        this.pnum = p;
        this.burst = b;
        this.arrival = a;
        this.exit = e;
-       this.status = s;
        this.pri = c; //i ran out of variables lol
    }
    /**All gets and sets:
-   /**Sophia S. Last Modified Date: 10/22/21 */ 
+   /**Sophia S. Last Modified Date: 10/25/21 */ 
    public int getPnum(){
        return pnum;
    }
@@ -44,9 +41,6 @@ public class Process{
    }
    public int getExit(){
        return exit;
-   }
-   public String getStatus(){
-       return status;
    }
    public int getPri(){
        return pri;
@@ -63,9 +57,6 @@ public class Process{
    public void setExit(int e){
        this.exit = e;
    }
-   public void setStatus(String s){
-       this.status = s;
-   }
    public void setPri(int p){
        this.pri = p;
    }
@@ -74,7 +65,6 @@ public class Process{
        System.out.println("Arrival: "+arrival);
        System.out.println("Burst: "+burst);
        System.out.println("Exit: "+exit);
-       System.out.println("Status: "+status);
        System.out.println("Priority: "+pri);
    }
 }

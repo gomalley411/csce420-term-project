@@ -2,19 +2,15 @@ import java.io.*;
 import java.util.*;
 /*
 Group 8
-<<<<<<< HEAD
-Sophia S 10.25.21
-=======
 Sophia S
 Jessica B
 Alex M
 George O
->>>>>>> origin/master
 */
 
 public class main{
     public static void main(String[] args){
-        /**Sophia S. Last Modified Date: 10/22/21 */
+        /**Sophia S. Last Modified Date: 10/25/21 */
         Process p0 = new Process();
         System.out.println("p0 created.");
         p0.printProcess();
