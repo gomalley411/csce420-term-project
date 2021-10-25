@@ -3,6 +3,9 @@ import java.util.*;
 /*
 Group 8
 Sophia S
+Jessica B
+Alex M
+George O
 */
 
 public class main{
