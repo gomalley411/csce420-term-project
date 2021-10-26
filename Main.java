@@ -16,7 +16,7 @@ public class main{
         /**I/O Burst times should be in range 11-21 */
         /**Sophia S. Last Modified Date: 10/26/21 */
         List<Process> hold = new ArrayList<Process>(); //new processes stored here
-        LinkedList<Process> ready = new LinkedList<Process>(); //final sorted processes go here
+        LinkedList<Process> newq = new LinkedList<Process>(); //final sorted processes go here
         int priority = 0;
         /**Generates the random arrival/burst/io burst */
         for(int i = 0; i < 4; i++){
@@ -48,19 +48,19 @@ public class main{
             PID is closer to 0 will be put in front
             -Round robin priority is based off of this sort*/
         /**Sophia S. Last Modified Date: 10/26/21 */
-        while(ready.size() < hold.size()){
+        while(newq.size() < hold.size()){
             for(int i = 0; i < 6; i++){
                 for(int j = 0; j < hold.size(); j++){
                     if(hold.get(j).getArr() == i){
                         hold.get(j).setPri(priority += 1);
-                        ready.add(hold.get(j));
+                        newq.add(hold.get(j));
                     }
                 }
             }
         }
-        System.out.println("Ready: ");
-        for(int i = 0; i < ready.size(); i++){
-                System.out.println("Process "+ ready.get(i).getPid() + " Pri: " + ready.get(i).getPri() +" ");
+        System.out.println("Newq: ");
+        for(int i = 0; i < newq.size(); i++){
+                System.out.println("Process "+ newq.get(i).getPid() + " Pri: " + newq.get(i).getPri() +" ");
         }
         /**------------------------------------------------------------------------------ */
         /**Step 3: Enter the ready queue */
