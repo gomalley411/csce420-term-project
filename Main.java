@@ -1,8 +1,6 @@
 import java.io.*;
 import java.util.*;
 import java.lang.Math;
-import Java.util.ArrayList;
-import Java.util.LinkedList;
 /*
 Group 8
 Sophia S
@@ -13,34 +11,58 @@ George O
 
 public class main{
     public static void main(String[] args){
-        /**Sophia S. Last Modified Date: 10/25/21 */
-        /*Process p0 = new Process(1, 5, 10, 0, 0, 1);
-        p0.printProcess();*/
-        
+        /**Step 1: Create Processes */
+        /**CPU Burst times should be in range 1-10 */
+        /**I/O Burst times should be in range 11-21 */
+        /**Sophia S. Last Modified Date: 10/26/21 */
+        List<Process> hold = new ArrayList<Process>(); //new processes stored here
+        LinkedList<Process> ready = new LinkedList<Process>(); //final sorted processes go here
+        int priority = 0;
+        /**Generates the random arrival/burst/io burst */
         for(int i = 0; i < 4; i++){
             int arrival = (int)(Math.random()*6);
             int burst = (int)(Math.random()*10) + 1;
             int iburst = (int)(Math.random()*20) + 1;
-            //System.out.println("Arrival: "+ arrival);
-            //System.out.println("burst: "+ burst);
-            //System.out.println("I/O burst: "+iburst);
+            Process p = new Process(i+1, burst, iburst, arrival, 0, 0);
+            hold.add(p);
         }
-        
-
-
-
-
-
-
-        /**Step 1: Create Processes */
-        /**CPU Burst times should be in range 1-10 */
-        /**I/O Burst times should be in range 11-21 */
-
+        /**This is strictly for testing------------------------- */
+        /*Process p1 = new Process(1, 5, 10, 0, 0, 0);
+        Process p2 = new Process(2, 5, 10, 0, 0, 0);
+        Process p3 = new Process(3, 6, 14, 3, 0, 0);
+        Process p4 = new Process(4, 2, 15, 2, 0, 0);
+        hold.add(p1);
+        hold.add(p2);
+        hold.add(p3);
+        hold.add(p4);*/
+        /**----------------------------------------------------- */
+        System.out.println("Hold: ");
+        for(int i = 0; i < hold.size(); i++){
+            System.out.print("Process "+ hold.get(i).getPid());
+            System.out.print(" Arrival: "+ hold.get(i).getArr());
+            System.out.println(" Burst: "+ hold.get(i).getBurst());
+        }
+        /**--------------------------------------------------------------------------------------- */
         /**Step 2: Sort processes based on arrival times 
             -If two processes come in at the same time, whichever
             PID is closer to 0 will be put in front
             -Round robin priority is based off of this sort*/
-
+        /**Sophia S. Last Modified Date: 10/26/21 */
+        while(ready.size() < hold.size()){
+            for(int i = 0; i < 6; i++){
+                for(int j = 0; j < hold.size(); j++){
+                    if(hold.get(j).getArr() == i){
+                        hold.get(j).setPri(priority += 1);
+                        ready.add(hold.get(j));
+                    }
+                }
+            }
+        }
+        System.out.println("Ready: ");
+        for(int i = 0; i < ready.size(); i++){
+                System.out.println("Process "+ ready.get(i).getPid() + " Pri: " + ready.get(i).getPri() +" ");
+        }
+        /**------------------------------------------------------------------------------ */
         /**Step 3: Enter the ready queue */
         /**We need to determine the size of the ready queue*/
 

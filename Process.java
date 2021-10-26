@@ -70,7 +70,7 @@ public class Process{
        this.pri = p;
    }
    public void printProcess(){
-       System.out.println("Process"+pid+": ");
+       System.out.println("Process "+pid+": ");
        System.out.println("Arrival: "+arrival);
        System.out.println("Burst: "+burst);
        System.out.println("I/O Burst: "+iburst);
