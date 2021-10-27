@@ -63,7 +63,7 @@ public class main{
                 System.out.println("Process "+ newq.get(i).getPid() + " Pri: " + newq.get(i).getPri() +" ");
         }
         /**------------------------------------------------------------------------------ */
-        /**Step 3: Enter the ready queue */
+        /**Step 3: Enter the ready queue - George */
         /**We need to determine the size of the ready queue*/
 
         /**Step 4: The first process in line will get the CPU */
