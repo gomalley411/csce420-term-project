@@ -4,7 +4,7 @@ import java.lang.Math;
 /*
 Group 8
 Sophia S
-Jessica B 
+Jessica B
 Alex M
 George O
 */
@@ -13,13 +13,13 @@ public class main{
     public static void main(String[] args){
         /**Initializations */
         List<Process> hold = new ArrayList<Process>(); //new processes stored here
-        List<Process> ihandle = new ArrayList<Process>(); //this is the interrupt handler 
+        List<Process> ihandle = new ArrayList<Process>(); //this is the interrupt handler
         LinkedList<Process> newq = new LinkedList<Process>(); //final sorted processes go here
         LinkedList<Process> runq = new LinkedList<Process>(); //running queue
         int priority = 0;
         int count = 0;
         int ctime = 0; //current time
-        int quantum = 4; //time quantum 
+        int quantum = 4; //time quantum
         /**------------------------------------------------------------------------ */
         /**Step 1: Create Processes */
         /**CPU Burst times should be in range 1-10 */
@@ -50,10 +50,10 @@ public class main{
             System.out.println(" Burst: "+ hold.get(i).getBurst());
         }
         /**--------------------------------------------------------------------------------------- */
-        /**Step 2: Sort processes based on arrival times 
-            -If two processes come in at the same time, whichever
-            PID is closer to 0 will be put in front
-            -Round robin priority is based off of this sort*/
+        /**Step 2: Sort processes based on arrival times
+         -If two processes come in at the same time, whichever
+         PID is closer to 0 will be put in front
+         -Round robin priority is based off of this sort*/
         /**Sophia S. Last Modified Date: 10/26/21 */
         while(newq.size() < hold.size()){
             for(int i = 0; i < 6; i++){
@@ -67,18 +67,31 @@ public class main{
         }
         System.out.println("Newq: ");
         for(int i = 0; i < newq.size(); i++){
-                System.out.println("Process "+ newq.get(i).getPid() + " Pri: " + newq.get(i).getPri() +" B: " + newq.get(i).getBurst() +" ");
+            System.out.println("Process "+ newq.get(i).getPid() + " Pri: " + newq.get(i).getPri() +" B: " + newq.get(i).getBurst() +" ");
         }
         /**------------------------------------------------------------------------------ */
         /**Step 3: Enter the ready queue */
         /**We need to determine the size of the ready queue*/
 
+        ArrayList<Process> ready = new ArrayList<Process>(); // ready queue
+        //System.out.println("ready");
+        for (int i = 0; i < newq.size(); i++) {
+            ready.add(newq.get(i));
+            // this is for testing only
+            //System.out.println("Process "+ ready.get(i).getPid() + " Pri: " + ready.get(i).getPri() +" B: " + ready.get(i).getBurst() +" ");
+        }
+        // once a process has entered the ready queue
+        // either move the head into the running queue (step 5)
+        // or enter the waiting queue
+        runq.add(ready.get(0));
+        ready.remove(0);
+
         /**Step 4: The first process in line will get the CPU */
 
         /**----------------------------------------------------------------- */
         /**Step 5: Run the process in the time quantum.
-            Finished? Move to terminated queue
-            Still working? Move to waiting queue to process I/O wait (lines 82-122)*/
+         Finished? Move to terminated queue
+         Still working? Move to waiting queue to process I/O wait (lines 82-122)*/
         /*System.out.println("Running queue implementation: ");
         //ihandle.add(readyq.getFirst()); //uncomment when readyq is done
         ihandle.add(newq.getFirst()); //testing
@@ -112,7 +125,7 @@ public class main{
             /*if(runq.getFirst().getiBurst() == 0){
                 //CPU bound
                 readyq.addLast(runq.getFirst());
-                runq.clear(); //clears the running queue 
+                runq.clear(); //clears the running queue
             }
             else{
                 //io bound
@@ -122,28 +135,28 @@ public class main{
         }*/
         /**----------------------------------------------------------------- */
         /**New list: Completed
-        All newly SORTED processes will go here. */
+         All newly SORTED processes will go here. */
 
-        /**Ready list: Incomplete
-        This will be done by George
-        All CPU bound processess will be in this queue. The head of this list will be moved into 
-        the running queue. */
+        /**Ready list: In progress
+         This will be done by George
+         All CPU bound processess will be in this queue. The head of this list will be moved into
+         the running queue. */
 
         /**Running list: In progress
-        Sophia 
-        This is where the process burst time will be decremented. If the time quantum is 4, then the 
-        process will have (burst time - 4) 
-        Finished? Record exit time*/
+         Sophia
+         This is where the process burst time will be decremented. If the time quantum is 4, then the
+         process will have (burst time - 4)
+         Finished? Record exit time*/
 
         /**Waiting list: Incomplete
-        This is where the process will go when it's not finished executing. It will stay in the wait queue
-        until it's I/O burst time variable has been decrememented to 0. */
+         This is where the process will go when it's not finished executing. It will stay in the wait queue
+         until it's I/O burst time variable has been decrememented to 0. */
 
         /**Terminated list: Incomplete
-        To enter this list, process burst time must be 0 and the process exit time must be recorded */
+         To enter this list, process burst time must be 0 and the process exit time must be recorded */
 
         /**Notes:
-        This model will continue running until the size of the terminated list is equal to the number of 
-        processes created.  */
+         This model will continue running until the size of the terminated list is equal to the number of
+         processes created.  */
     }
 }
