@@ -153,6 +153,7 @@ public class main{
          until it's I/O burst time variable has been decrememented to 0. */
 
         /**Terminated list: Incomplete
+         * Jessica
          To enter this list, process burst time must be 0 and the process exit time must be recorded */
 
         /**Notes:
