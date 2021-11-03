@@ -16,6 +16,8 @@ public class main{
         List<Process> ihandle = new ArrayList<Process>(); //this is the interrupt handler
         LinkedList<Process> newq = new LinkedList<Process>(); //final sorted processes go here
         LinkedList<Process> runq = new LinkedList<Process>(); //running queue
+        LinkedList<Process> waitq = new LinkedList<Process>(); //waiting queue
+        
         int priority = 0;
         int count = 0;
         int ctime = 0; //current time
@@ -92,9 +94,9 @@ public class main{
         /**Step 5: Run the process in the time quantum.
          Finished? Move to terminated queue
          Still working? Move to waiting queue to process I/O wait (lines 82-122)*/
-        /*System.out.println("Running queue implementation: ");
+        System.out.println("Running queue implementation: ");
         //ihandle.add(readyq.getFirst()); //uncomment when readyq is done
-        ihandle.add(newq.getFirst()); //testing
+        /*ihandle.add(newq.getFirst()); //testing
         runq.add(ihandle.get(0));
         System.out.println("Before: " + runq.getFirst().getBurst());
         int burst = runq.getFirst().getBurst();
@@ -133,6 +135,25 @@ public class main{
                 runq.clear(); //clears the running queue
             }
         }*/
+        
+        /**Waiting Queue: This is where the process will go when it's not finished executing. 
+         * It will stay in the wait queue
+         until it's I/O burst time variable has been decrememented to 0. 
+         -Jessica's */
+ 
+        System.out.println("Before: " + waitq.getFirst().getiBurst());
+        int iburst = waitq.getFirst().getiBurst();
+        while(iburst > 0){
+                iburst = iburst - 1;
+        }
+        System.out.println("After: " + waitq.getFirst().getiBurst()); //should be zero
+        
+    	//when i/o burst time is down to zero (has finished its waiting period)
+        System.out.println("iburst is 0");
+        readyq.add(waitq.getFirst()); //go back to the ready queue after done waiting for i/o
+        waitq.removeFirst();//get the waitq item that finished off the waitq so another waitq item can run
+
+        
         /**----------------------------------------------------------------- */
         /**New list: Completed
          All newly SORTED processes will go here. */
@@ -148,12 +169,14 @@ public class main{
          process will have (burst time - 4)
          Finished? Record exit time*/
 
-        /**Waiting list: Incomplete
+        /**Waiting list: In progress
          This is where the process will go when it's not finished executing. It will stay in the wait queue
-         until it's I/O burst time variable has been decrememented to 0. */
+         until it's I/O burst time variable has been decrememented to 0. 
+         Jessica
+         */
 
         /**Terminated list: Incomplete
-         * Jessica
+         * 
          To enter this list, process burst time must be 0 and the process exit time must be recorded */
 
         /**Notes:
