@@ -76,6 +76,8 @@ public class main{
         /**We need to determine the size of the ready queue*/
 
         ArrayList<Process> ready = new ArrayList<Process>(); // ready queue
+        Collections.sort(newq, Comparator.comparing(Process::getPid)); // sorts the new queue by priority
+        
         //System.out.println("ready");
         for (int i = 0; i < newq.size(); i++) {
             ready.add(newq.get(i));
