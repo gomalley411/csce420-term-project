@@ -143,17 +143,22 @@ public class main{
          until it's I/O burst time variable has been decrememented to 0. 
          -Jessica's */
  
-        System.out.println("Before: " + waitq.getFirst().getiBurst());
-        int iburst = waitq.getFirst().getiBurst();
-        while(iburst > 0){
-                iburst = iburst - 1;
+        System.out.println("Before decrement (waitq): " + waitq.getFirst().getiBurst());
+        if(waitq.isEmpty() != true) {
+        	int iburst = waitq.getFirst().getiBurst();
         }
-        System.out.println("After: " + waitq.getFirst().getiBurst()); //should be zero
-        
-    	//when i/o burst time is down to zero (has finished its waiting period)
-        System.out.println("iburst is 0");
-        readyq.add(waitq.getFirst()); //go back to the ready queue after done waiting for i/o
-        waitq.removeFirst();//get the waitq item that finished off the waitq so another waitq item can run
+        if(iburst > 0){
+                iburst = iburst - 1;
+                System.out.println("After decrement (waitq): " + waitq.getFirst().getiBurst()); //should be zero
+        }
+        else {
+	        System.out.println("After iburst = 0 (waitq): " + waitq.getFirst().getiBurst()); //should be zero
+	        
+	    	//when i/o burst time is down to zero (has finished its waiting period)
+	        System.out.println("iburst is 0");
+	        readyq.add(waitq.getFirst()); //go back to the ready queue after done waiting for i/o
+	        waitq.removeFirst();//get the waitq item that finished off the waitq so another waitq item can run
+        }
 
         
         /**----------------------------------------------------------------- */
