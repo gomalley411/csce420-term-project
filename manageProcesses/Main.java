@@ -3,10 +3,10 @@ import java.util.*;
 import java.lang.Math;
 /*
 Group 8
-Sophia S
-Jessica B
-Alex M
-George O
+Sophia S.
+Jessica B.
+Alex M.
+George O.
 */
 
 public class Main{
