@@ -91,7 +91,7 @@ public class Main{
             // or enter the waiting queue
             runq.add(ready.get(0));
             ready.remove(0);
-
+            
             if (ready.size() > 0) { //uncomment when ready queue is fixed
                 System.out.println("Ready queue: ");
                 for (int i = 0; i < ready.size(); i++) {
@@ -134,7 +134,8 @@ public class Main{
                             Process w = new Process(runq.getFirst().getPid(), runq.getFirst().getBurst(), runq.getFirst().getiBurst(), runq.getFirst().getArr(), runq.getFirst().getExit(), runq.getFirst().getPri(), cs);
                             pcb.add(w);
                         }
-                    } else { //the first process state is saved and created
+                    } 
+                    else { //the first process state is saved and created
                         Process w = new Process(runq.getFirst().getPid(), runq.getFirst().getBurst(), runq.getFirst().getiBurst(), runq.getFirst().getArr(), runq.getFirst().getExit(), runq.getFirst().getPri(), cs);
                         pcb.add(w);
                     }
@@ -145,7 +146,6 @@ public class Main{
                     ready.remove(0);
                     ihandle.clear(); //clear interrupt handler
                     count = 0;
-                    set = false;
                 }
             }
             if (runq.size() > 0) {
@@ -163,7 +163,8 @@ public class Main{
                         termq.add(runq.getFirst());
                         runq.remove(0);
                         //count = 0; //reset count
-                    } else {
+                    } 
+                    else {
                         System.out.println("-process burst is decremented");
                         burst -= 1;
                         runq.getFirst().setBurst(burst);
@@ -173,8 +174,8 @@ public class Main{
                         System.out.println("-time increased 1ms");
                         ctime += 1;
                     }
-
-                } else { //allotted time is up
+                } 
+                else { //allotted time is up
                     if (burst == 0) {
                         System.out.println("-process burst is 0");
                         System.out.println("-Process " + runq.getFirst().getPid() + " is in termq.");
@@ -182,12 +183,12 @@ public class Main{
                         termq.add(runq.getFirst());
                         runq.remove(0);
                         //count = 0; //reset count
-                    } else {
+                    } 
+                    else {
                         System.out.println("-burst is not 0 but time is up");
                         //count = 0;
-                        //if problems occur, comment 189-214
+                        //context switch from running -> ready or running -> waiting
                         cs = runq.getFirst().getCS() + 1; //add context switch
-                        set = false; //has not been set in pcb list yet
                         if (pcb.size() > 0) { //PCB implementation
                             for (int i = 0; i < pcb.size(); i++) {
                                 if (pcb.get(i).getPid() == runq.getFirst().getPid()) {
@@ -197,16 +198,8 @@ public class Main{
                                     pcb.get(i).setExit(runq.getFirst().getExit());
                                     pcb.get(i).setPri(runq.getFirst().getPri());
                                     pcb.get(i).setCS(cs);
-                                    set = true; //the state is saved and the switch is made
                                 }
                             }
-                            if (set == false) { //new process is created if process isn't in pcb already
-                                Process w = new Process(runq.getFirst().getPid(), runq.getFirst().getBurst(), runq.getFirst().getiBurst(), runq.getFirst().getArr(), runq.getFirst().getExit(), runq.getFirst().getPri(), cs);
-                                pcb.add(w);
-                            }
-                        } else { //the first process state is saved and created
-                            Process w = new Process(runq.getFirst().getPid(), runq.getFirst().getBurst(), runq.getFirst().getiBurst(), runq.getFirst().getArr(), runq.getFirst().getExit(), runq.getFirst().getPri(), cs);
-                            pcb.add(w);
                         }
                         System.out.println("-1ms added for context switch.");
                         ctime += 1;
@@ -219,13 +212,15 @@ public class Main{
                             ready.addLast(ihandle.get(0));
                             runq.clear(); //clears the running queue
                             ihandle.clear(); //clears interrupt handler
-                        } else {
+                        } 
+                        else {
                             //io bound
                             System.out.println("-Process " + runq.getFirst().getPid() + " is I/O Bound" + "\n-Moving to waiting queue.");
                             ihandle.add(runq.getFirst());
                             if (waitq.size() == 0) {
                                 waitq.addFirst(ihandle.get(0));
-                            } else {
+                            } 
+                            else {
                                 waitq.addLast(ihandle.get(0));
                             }
                             runq.clear(); //clears the running queue
@@ -234,38 +229,40 @@ public class Main{
                     }
                     /*if(count == quantum){
                         count = 0; //reset count
-                    }
+                    }*/
                 }
             }
             /**----------------------------------------------------------------------------------------*/
-                    /**Waiting Queue: This is where the process will go when it's not finished executing.
-                     * It will stay in the wait queue
-                     until it's I/O burst time variable has been decrememented to 0.
-                     -Jessica's */
-                    //System.out.println("Before decrement (waitq): " + waitq.getFirst().getiBurst());
-                    if (waitq.isEmpty() != true) {
-                        int iburst = waitq.getFirst().getiBurst();
-                        if (iburst > 0) {
-                            iburst = iburst - 1;
-                            System.out.println("-I/O burst decremented." + "\n-time increased 1ms");
-                            //System.out.println("After decrement (waitq): " + waitq.getFirst().getiBurst()); //should be zero
-                            ctime += 1;
-                        } else {
-                            //System.out.println("After iburst = 0 (waitq): " + waitq.getFirst().getiBurst()); //should be zero
-                            //when i/o burst time is down to zero (has finished its waiting period)
-                            System.out.println("iburst is 0");
-                            ready.add(waitq.getFirst()); //go back to the ready queue after done waiting for i/o
-                            waitq.removeFirst();//get the waitq item that finished off the waitq so another waitq item can run
-                        }
-                        System.out.println("waitq: ");
-                        if (waitq.size() > 0) {
-                            for (int i = 0; i < waitq.size(); i++) {
-                                System.out.println("Process " + waitq.get(i).getPid() + " Pri: " + waitq.get(i).getPri() + " B: " + waitq.get(i).getBurst() + " IO: " + waitq.get(i).getiBurst());
-                            }
-                        }
+            /**Waiting Queue: This is where the process will go when it's not finished executing.
+             * It will stay in the wait queue
+            until it's I/O burst time variable has been decrememented to 0.
+             -Jessica's */
+            //System.out.println("Before decrement (waitq): " + waitq.getFirst().getiBurst());
+            if (waitq.isEmpty() != true) {
+                int iburst = waitq.getFirst().getiBurst();
+                if (iburst > 0) {
+                    iburst = iburst - 1;
+                    System.out.println("-I/O burst decremented." + "\n-time increased 1ms");
+                    waitq.getFirst().setiBurst(iburst);
+                    //System.out.println("After decrement (waitq): " + waitq.getFirst().getiBurst()); //should be zero
+                    ctime += 1;
+                } 
+                else {
+                    //System.out.println("After iburst = 0 (waitq): " + waitq.getFirst().getiBurst()); //should be zero
+                    //when i/o burst time is down to zero (has finished its waiting period)
+                    System.out.println("iburst is 0");
+                    ready.add(waitq.getFirst()); //go back to the ready queue after done waiting for i/o
+                    waitq.removeFirst();//get the waitq item that finished off the waitq so another waitq item can run
+                }
+                System.out.println("waitq: ");
+                if (waitq.size() > 0) {
+                    for (int i = 0; i < waitq.size(); i++) {
+                        System.out.println("Process " + waitq.get(i).getPid() + " Pri: " + waitq.get(i).getPri() + " B: " + waitq.get(i).getBurst() + " IO: " + waitq.get(i).getiBurst());
                     }
                 }
-        /*System.out.println("Done"); //uncomment 246-256 when ready queue is fixed
+            }
+        }
+        System.out.println("Done"); //uncomment 246-256 when ready queue is fixed
         System.out.println("-----------termq: ------------");
         if(termq.size() > 0){
             for(int i = 0; i < termq.size(); i++){
@@ -275,8 +272,6 @@ public class Main{
         System.out.println("-----------pcb: ------------");
         for(int i = 0; i < pcb.size(); i++){
             System.out.println("Process "+ pcb.get(i).getPid() + " CS: "+ pcb.get(i).getCS());
-        }*/
-            }
         }
     }
 }
