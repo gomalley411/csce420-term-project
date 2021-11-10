@@ -78,10 +78,10 @@ public class Main{
         /**Step 3: Enter the ready queue */
         /**We need to determine the size of the ready queue*/
         ArrayList<Process> ready = new LinkedList<Process>(); // ready queue
-        //while(termq.size() < pronum){ //uncomment when ready queue is fixed
-            //System.out.println("------------------ctime: "+ ctime + "------------------"); //uncomment when ready queue is fixed
-            //System.out.println("ready");
-            for (int i = 0; i < newq.size(); i++) { 
+        while(termq.size() < pronum){ //uncomment when ready queue is fixed
+            System.out.println("------------------ctime: "+ ctime + "------------------"); //uncomment when ready queue is fixed
+            System.out.println("ready");
+            for (int i = 0; i < 4; i++) { 
                 ready.add(newq.get(i)); 
                 // this is for testing only
                 //System.out.println("Process "+ ready.get(i).getPid() + " Pri: " + ready.get(i).getPri() +" B: " + ready.get(i).getBurst() +" ");
@@ -92,7 +92,7 @@ public class Main{
             runq.add(ready.get(0)); 
             ready.remove(0); 
             
-            /*if(ready.size() > 0){ //uncomment when ready queue is fixed
+            if(ready.size() > 0){ //uncomment when ready queue is fixed
               System.out.println("Ready queue: ");
                 for(int i = 0; i < ready.size(); i++){
                     System.out.println("Process "+ ready.get(i).getPid() + " Pri: " + ready.get(i).getPri() +" B: " + ready.get(i).getBurst() +" IO: " + ready.get(i).getiBurst());
@@ -103,7 +103,7 @@ public class Main{
                 for(int i = 0; i < newq.size(); i++){
                     System.out.println("Process "+ newq.get(i).getPid() + " Pri: " + newq.get(i).getPri() +" B: " + newq.get(i).getBurst() +" IO: " + newq.get(i).getiBurst());
                 } 
-            }*/
+            }
             //-------------------------------------------------------------------------*/
             /**Step 4: The first process in line will get the CPU */
 
@@ -112,7 +112,7 @@ public class Main{
             Finished? Move to terminated queue
             Still working? Move to waiting queue to process I/O wait*/
             /**Sophia S. Last Modified Date: 11/9/21 */ 
-            /*if(ready.size() > 0){ //uncomment 114-216 when ready queue is fixed
+            if(ready.size() > 0){ //uncomment 114-216 when ready queue is fixed
                 if(runq.size() == 0){
                     ihandle.add(ready.getFirst()); //interrupt handle
                     runq.add(ihandle.get(0)); //add to running queue
@@ -214,7 +214,7 @@ public class Main{
                         count = 0; //reset count
                     }
                 }
-            }*/
+            }
             /**----------------------------------------------------------------------------------------*/
             /**Waiting Queue: This is where the process will go when it's not finished executing. 
             * It will stay in the wait queue
