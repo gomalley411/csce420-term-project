@@ -145,6 +145,7 @@ public class Main{
                     ready.remove(0);
                     ihandle.clear(); //clear interrupt handler
                     count = 0;
+                    set = false;
                 }
             }
             if (runq.size() > 0) {
@@ -184,6 +185,33 @@ public class Main{
                     } else {
                         System.out.println("-burst is not 0 but time is up");
                         //count = 0;
+                        //if problems occur, comment 189-214
+                        cs = runq.getFirst().getCS() + 1; //add context switch
+                        set = false; //has not been set in pcb list yet
+                        if (pcb.size() > 0) { //PCB implementation
+                            for (int i = 0; i < pcb.size(); i++) {
+                                if (pcb.get(i).getPid() == runq.getFirst().getPid()) {
+                                    pcb.get(i).setBurst(runq.getFirst().getBurst());
+                                    pcb.get(i).setiBurst(runq.getFirst().getiBurst());
+                                    pcb.get(i).setArr(runq.getFirst().getArr());
+                                    pcb.get(i).setExit(runq.getFirst().getExit());
+                                    pcb.get(i).setPri(runq.getFirst().getPri());
+                                    pcb.get(i).setCS(cs);
+                                    set = true; //the state is saved and the switch is made
+                                }
+                            }
+                            if (set == false) { //new process is created if process isn't in pcb already
+                                Process w = new Process(runq.getFirst().getPid(), runq.getFirst().getBurst(), runq.getFirst().getiBurst(), runq.getFirst().getArr(), runq.getFirst().getExit(), runq.getFirst().getPri(), cs);
+                                pcb.add(w);
+                            }
+                        } else { //the first process state is saved and created
+                            Process w = new Process(runq.getFirst().getPid(), runq.getFirst().getBurst(), runq.getFirst().getiBurst(), runq.getFirst().getArr(), runq.getFirst().getExit(), runq.getFirst().getPri(), cs);
+                            pcb.add(w);
+                        }
+                        System.out.println("-1ms added for context switch.");
+                        ctime += 1;
+                        System.out.println("------------------ctime: " + ctime + "------------------");
+                        runq.getFirst().setCS(cs); //update the new context switch number
                         if (runq.getFirst().getiBurst() == 0) {
                             //CPU bound
                             System.out.println("-Process " + runq.getFirst().getPid() + " is CPU Bound" + "\n-Moving to ready queue.");
