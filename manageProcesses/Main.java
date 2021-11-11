@@ -17,7 +17,6 @@ public class Main{
         List<Process> pcb = new ArrayList<Process>(); //process control block
         LinkedList<Process> newq = new LinkedList<Process>(); //final sorted processes go here
         LinkedList<Process> runq = new LinkedList<Process>(); //running queue
-        LinkedList<Process> waitq = new LinkedList<Process>(); //waiting queue
         LinkedList<Process> termq = new LinkedList<Process>(); //terminated queue
 
         int priority = 0;
@@ -25,9 +24,12 @@ public class Main{
         int ctime = 0; //current time
         int quantum = 4; //time quantum
         int pronum = 4; //number of processes
-        int cs = 0; //contex switches
+        int cs = 0; //context switches
         int qsize = 4; //size of ready+waiting queue
         Boolean set;
+        
+        LinkedList<Process> waitq = new LinkedList<Process>(qsize); //waiting queue instantiaed after others
+        															//for the sake of size declaring 
         /**------------------------------------------------------------------------ */
         /**Step 1: Create Processes */
         /**CPU Burst times should be in range 1-10 */
@@ -76,8 +78,9 @@ public class Main{
         //pronum = newq.size();
         /**------------------------------------------------------------------------------ */
         /**Step 3: Enter the ready queue */
-        /**We need to determine the size of the ready queue*/
-        LinkedList<Process> ready = new LinkedList<Process>(); // ready queue
+        /**We need to determine the size of the ready queue
+         * George*/
+        LinkedList<Process> ready = new LinkedList<Process>(qsize); // ready queue
         while (termq.size() < pronum) { //uncomment when ready queue is fixed
             System.out.println("------------------ctime: " + ctime + "------------------"); //uncomment when ready queue is fixed
             System.out.println("ready");
