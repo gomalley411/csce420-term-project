@@ -12,18 +12,19 @@ George O.
 public class Main{
     public static void main(String[] args) {
         /**Initializations */
-        List<Process> hold = new ArrayList<Process>(); //new processes stored here
+        LinkedList<Process> hold = new LinkedList<Process>(); //new processes stored here
         List<Process> ihandle = new ArrayList<Process>(); //this is the interrupt handler
+        List<Process> ihandle2 = new ArrayList<Process>();
         List<Process> pcb = new ArrayList<Process>(); //process control block
         LinkedList<Process> newq = new LinkedList<Process>(); //final sorted processes go here
         LinkedList<Process> runq = new LinkedList<Process>(); //running queue
         LinkedList<Process> termq = new LinkedList<Process>(); //terminated queue
-
+        
         int priority = 0;
         int count = 0;
         int ctime = 0; //current time
         int quantum = 4; //time quantum
-        int pronum = 4; //number of processes
+        int pronum = 5; //number of processes
         int cs = 0; //context switches
         int qsize = 4; //size of ready+waiting queue
         Boolean set;
@@ -34,7 +35,7 @@ public class Main{
         /**Step 1: Create Processes */
         /**CPU Burst times should be in range 1-10 */
         /**I/O Burst times should be in range 11-21 */
-        /**Sophia S. Last Modified Date: 11/9/21 */
+        /**Sophia S. Last Modified Date: 11/11/21 */
         /**Generates the random arrival/burst/io burst */
         for (int i = 0; i < pronum; i++) {
             int arrival = (int) (Math.random() * 6);
@@ -43,46 +44,48 @@ public class Main{
             if (i % 2 != 0) {
                 iburst = (int) (Math.random() * 20) + 10;
             }
-            Process p = new Process(i + 1, burst, iburst, arrival, 0, 0, 0);
+            priority += 1;
+            Process p = new Process(i + 1, burst, iburst, arrival, 0, priority, 0);
             hold.add(p);
         }
-        /**This is strictly for testing------------------------- */
-        /*Process p1 = new Process(1, 4, 10, 0, 0, 0, 0);
-        Process p2 = new Process(2, 5, 10, 0, 0, 0, 0);
-        Process p3 = new Process(3, 6, 14, 3, 0, 0, 0);
-        Process p4 = new Process(4, 2, 0, 2, 0, 0, 0);
-        hold.add(p1);
-        hold.add(p2);
-        hold.add(p3);
-        hold.add(p4);*/
         /**--------------------------------------------------------------------------------------- */
-        /**Step 2: Sort processes based on arrival times
-         -If two processes come in at the same time, whichever
-         PID is closer to 0 will be put in front
-         -Round robin priority is based off of this sort*/
-        /**Sophia S. Last Modified Date: 10/26/21 */
-        while (newq.size() < hold.size()) {
-            for (int i = 0; i < 6; i++) {
-                for (int j = 0; j < hold.size(); j++) {
-                    if (hold.get(j).getArr() == i) {
-                        hold.get(j).setPri(priority += 1);
-                        newq.add(hold.get(j));
+        System.out.println(pronum+ " Process(es) created.\n");
+        LinkedList<Process> ready = new LinkedList<Process>(qsize); // ready queue
+        while (termq.size() < pronum) { 
+            System.out.println("------------------ctime: " + ctime + "------------------"); 
+            /**------------------------------------------------------------------------------ */
+            /**Step 2: Sort processes based on arrival times
+            -If two processes come in at the same time, whichever
+            PID is closer to 0 will be put in front
+            -Round robin priority is based off of this sort*/
+            /**Sophia S. Last Modified Date: 11/11/21 */
+            if(hold.size() > 0){
+                if(newq.size() < qsize){
+                    for (int i = 0; i < qsize; i++) {
+                        if(newq.size() == qsize){
+                            i = qsize;
+                        }
+                        else if(hold.size() == 0){
+                            i = qsize;
+                        }
+                        else{
+                            newq.add(hold.getFirst());
+                            System.out.println("PROCESS "+hold.getFirst().getPid() + " MOVED TO NEW QUEUE.");
+                            hold.removeFirst();
+                        }
                     }
                 }
             }
-        }
-        System.out.println("Newq: ");
-        for (int i = 0; i < newq.size(); i++) {
-            System.out.println("Process " + newq.get(i).getPid() + " Pri: " + newq.get(i).getPri() + " B: " + newq.get(i).getBurst() + " IO: " + newq.get(i).getiBurst());
-        }
-        //pronum = newq.size();
-        /**------------------------------------------------------------------------------ */
-        /**Step 3: Enter the ready queue */
-        /**We need to determine the size of the ready queue
-         * George*/
-        LinkedList<Process> ready = new LinkedList<Process>(qsize); // ready queue
-        while (termq.size() < pronum) { //uncomment when ready queue is fixed
-            System.out.println("------------------ctime: " + ctime + "------------------"); //uncomment when ready queue is fixed
+            if(newq.size() > 0){
+                System.out.println("Newq: ");
+                for (int i = 0; i < newq.size(); i++) {
+                    System.out.println("Process " + newq.get(i).getPid() + " Pri: " + newq.get(i).getPri() + " B: " + newq.get(i).getBurst() + " IO: " + newq.get(i).getiBurst());
+                }    
+            }
+            /**------------------------------------------------------------------------------ */
+            /**Step 3: Enter the ready queue */
+            /**We need to determine the size of the ready queue
+            * George*/
             System.out.println("ready");
             for (int i = 0; i < 4; i++) {
                 ready.add(newq.get(i));
@@ -94,8 +97,8 @@ public class Main{
             // or enter the waiting queue
             runq.add(ready.get(0));
             ready.remove(0);
-            
-            if (ready.size() > 0) { //uncomment when ready queue is fixed
+            /**------------------------------------------------------------------------------ */
+            if (ready.size() > 0) { 
                 System.out.println("Ready queue: ");
                 for (int i = 0; i < ready.size(); i++) {
                     System.out.println("Process " + ready.get(i).getPid() + " Pri: " + ready.get(i).getPri() + " B: " + ready.get(i).getBurst() + " IO: " + ready.get(i).getiBurst());
@@ -125,7 +128,6 @@ public class Main{
              *      upon this error within 30 minutes of testing is kinda incredible. I want to fix it, and I have some ideas to do it, but I'm not sure if they'll work and testing this thing
              *      (short of building a bogus ready queue full of custom-built Burst = 1 Processes) is gonna be a pain -- Note* -- wasn't actually that hard, just needed some creativity
              */
-
             int p = (int)(Math.random()*ready.size());
             System.out.println("Process: " + p); // testing
             System.out.println("Original Burst: " + ready.get(p).getBurst());
@@ -164,15 +166,15 @@ public class Main{
                 ready.get(p).setBurst(ready.get(p).getBurst() + v); // add v to original Burst time: (New burst = old burst + [random value 1-10])
             }
             System.out.println("New burst time: " + ready.get(p).getBurst()); // testing
-
-
+            
             /**----------------------------------------------------------------- */
             /**Step 5: Run the process in the time quantum.
              Finished? Move to terminated queue
              Still working? Move to waiting queue to process I/O wait*/
-            /**Sophia S. Last Modified Date: 11/9/21 */
+            /**Sophia S. Last Modified Date: 11/11/21 */
             if (ready.size() > 0) { //uncomment 114-216 when ready queue is fixed
-                if (runq.size() == 0) {
+                if(runq.size() == 0) {
+                    System.out.println("Interrupt issued.");
                     ihandle.add(ready.getFirst()); //interrupt handle
                     runq.add(ihandle.get(0)); //add to running queue
                     cs = runq.getFirst().getCS() + 1; //add context switch
@@ -203,11 +205,12 @@ public class Main{
                     System.out.println("------------------ctime: " + ctime + "------------------");
                     runq.getFirst().setCS(cs); //update the new context switch number
                     ready.remove(0);
+                    System.out.println("PROCESS "+ihandle.get(0).getPid() + " MOVED TO RUNNING QUEUE.");
                     ihandle.clear(); //clear interrupt handler
                     count = 0;
                 }
             }
-            if (runq.size() > 0) {
+            if(runq.size() > 0) {
                 System.out.println("runq: ");
                 for (int i = 0; i < runq.size(); i++) {
                     System.out.println("Process " + runq.get(i).getPid() + " Pri: " + runq.get(i).getPri() + " B: " + runq.get(i).getBurst() + " IO: " + runq.get(i).getiBurst());
@@ -217,11 +220,10 @@ public class Main{
                     System.out.println("count: " + count);
                     if (burst == 0) {
                         System.out.println("-process burst is 0");
-                        System.out.println("-Process " + runq.getFirst().getPid() + " is in termq.");
+                        System.out.println("PROCESS " + runq.getFirst().getPid() + " MOVED TO TERMINATED QUEUE.");
                         runq.getFirst().setExit(ctime);
                         termq.add(runq.getFirst());
                         runq.remove(0);
-                        //count = 0; //reset count
                     } 
                     else {
                         System.out.println("-process burst is decremented");
@@ -237,15 +239,13 @@ public class Main{
                 else { //allotted time is up
                     if (burst == 0) {
                         System.out.println("-process burst is 0");
-                        System.out.println("-Process " + runq.getFirst().getPid() + " is in termq.");
+                        System.out.println("PROCESS " + runq.getFirst().getPid() + " MOVED TO TERMINATED QUEUE");
                         runq.getFirst().setExit(ctime);
                         termq.add(runq.getFirst());
                         runq.remove(0);
-                        //count = 0; //reset count
                     } 
                     else {
                         System.out.println("-burst is not 0 but time is up");
-                        //count = 0;
                         //context switch from running -> ready or running -> waiting
                         cs = runq.getFirst().getCS() + 1; //add context switch
                         if (pcb.size() > 0) { //PCB implementation
@@ -263,32 +263,36 @@ public class Main{
                         System.out.println("-1ms added for context switch.");
                         ctime += 1;
                         System.out.println("------------------ctime: " + ctime + "------------------");
-                        runq.getFirst().setCS(cs); //update the new context switch number
-                        if (runq.getFirst().getiBurst() == 0) {
+                        ihandle.add(runq.getFirst());
+                        runq.clear(); //clears the running queue
+                        ihandle.get(0).setCS(cs); //update the new context switch number
+                        if(ihandle.get(0).getiBurst() == 0){
                             //CPU bound
-                            System.out.println("-Process " + runq.getFirst().getPid() + " is CPU Bound" + "\n-Moving to ready queue.");
-                            ihandle.add(runq.getFirst());
+                            System.out.println("PROCESS " + ihandle.get(0).getPid() + " IS CPU BOUND." + "\n-MOVING TO READY QUEUE.");
+                            if(ready.size() == qsize){
+                                System.out.println("interrupt issued.");
+                                ihandle2.add(ready.getFirst());
+                                System.out.println("PROCESS "+ihandle2.get(0).getPid() + " MOVED TO RUNNING QUEUE.");
+                                runq.add(ihandle2.get(0)); //add to running queue
+                                ready.removeFirst();
+                                ihandle2.clear();
+                                count = 0;
+                            }
                             ready.addLast(ihandle.get(0));
-                            runq.clear(); //clears the running queue
                             ihandle.clear(); //clears interrupt handler
                         } 
                         else {
                             //io bound
-                            System.out.println("-Process " + runq.getFirst().getPid() + " is I/O Bound" + "\n-Moving to waiting queue.");
-                            ihandle.add(runq.getFirst());
+                            System.out.println("PROCESS " + ihandle.get(0).getPid() + " IS I/O BOUND." + "\n-MOVING TO WAITING QUEUE.");
                             if (waitq.size() == 0) {
                                 waitq.addFirst(ihandle.get(0));
                             } 
                             else {
                                 waitq.addLast(ihandle.get(0));
                             }
-                            runq.clear(); //clears the running queue
                             ihandle.clear(); //clears the interrupt handler
                         }
                     }
-                    /*if(count == quantum){
-                        count = 0; //reset count
-                    }*/
                 }
             }
             /**----------------------------------------------------------------------------------------*/
@@ -321,7 +325,7 @@ public class Main{
                 }
             }
         }
-        System.out.println("Done"); //uncomment 246-256 when ready queue is fixed
+        System.out.println("\n---------SIMULATION COMPLETE. ALL PROCESSES TERMIANTED---------\n"); 
         System.out.println("-----------termq: ------------");
         if(termq.size() > 0){
             for(int i = 0; i < termq.size(); i++){
