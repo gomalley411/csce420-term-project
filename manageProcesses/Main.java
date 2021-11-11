@@ -87,8 +87,8 @@ public class Main{
 
             // ask Wu for help -- we need to check if the newq is bigger OR smaller than the ready queue
 
-            // if they are the same size
-            if (newq.size() == qsize) {
+            // check for all possible scenarios
+            if (newq.size() <= qsize) {
                 for (int i = 0; i < newq.size(); i++) {
                     ready.add(newq.get(i));
                     newq.remove(newq.get(i));   // removes the process from the new queue
@@ -101,9 +101,6 @@ public class Main{
                     ready.add(newq.get(i));
                     newq.remove(newq.get(i));
                 }
-            }
-            else {  // if the newq is less than the ready queue will be
-                // maybe move process to ready queue and then once done change qsize to the ready queue size??? IDK
             }
             Collections.sort(ready, Comparator.comparing(Process::getPri)); // sort the ready queue by priority
 
