@@ -51,7 +51,6 @@ public class Main{
         }
         /**--------------------------------------------------------------------------------------- */
         System.out.println(pronum+ " Process(es) created.\n");
-        LinkedList<Process> ready = new LinkedList<Process>(qsize); // ready queue
         while (termq.size() < pronum) { 
             System.out.println("------------------ctime: " + ctime + "------------------"); 
             /**------------------------------------------------------------------------------ */
@@ -77,18 +76,6 @@ public class Main{
                     }
                 }
             }
-<<<<<<< HEAD
-            if(newq.size() > 0){
-                System.out.println("Newq: ");
-                for (int i = 0; i < newq.size(); i++) {
-                    System.out.println("Process " + newq.get(i).getPid() + " Pri: " + newq.get(i).getPri() + " B: " + newq.get(i).getBurst() + " IO: " + newq.get(i).getiBurst());
-                }    
-            }
-            /**------------------------------------------------------------------------------ */
-            /**Step 3: Enter the ready queue */
-            /**We need to determine the size of the ready queue
-            * George*/
-=======
         }
         System.out.println("Newq: ");
         for (int i = 0; i < newq.size(); i++) {
@@ -101,7 +88,6 @@ public class Main{
          * George*/
         while (termq.size() < pronum) {
             System.out.println("------------------ctime: " + ctime + "------------------"); //uncomment when ready queue is fixed
->>>>>>> 108da23c280cc80e4a73b8192dc16a0b949de560
             System.out.println("ready");
 
             // ask Wu for help -- we need to check if the newq is bigger OR smaller than the ready queue
@@ -128,13 +114,8 @@ public class Main{
             // or enter the waiting queue
             runq.add(ready.get(0));
             ready.remove(0);
-<<<<<<< HEAD
-            /**------------------------------------------------------------------------------ */
-            if (ready.size() > 0) { 
-=======
 
             if (ready.size() > 0) { //uncomment when ready queue is fixed
->>>>>>> 108da23c280cc80e4a73b8192dc16a0b949de560
                 System.out.println("Ready queue: ");
                 for (int i = 0; i < ready.size(); i++) {
                     System.out.println("Process " + ready.get(i).getPid() + " Pri: " + ready.get(i).getPri() + " B: " + ready.get(i).getBurst() + " IO: " + ready.get(i).getiBurst());
