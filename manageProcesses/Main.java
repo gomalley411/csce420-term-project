@@ -30,7 +30,7 @@ public class Main{
         int qsize = 4; //size of ready+waiting queue
         Boolean set;
         
-        LinkedList<Process> waitq = new LinkedList<Process>(qsize); //waiting queue instantiaed after others
+        LinkedList<Process> waitq = new LinkedList<Process>(); //waiting queue instantiaed after others
         															//for the sake of size declaring 
         /**------------------------------------------------------------------------ */
         /**Step 1: Create Processes */
@@ -76,20 +76,15 @@ public class Main{
                     }
                 }
             }
-        }
-        System.out.println("Newq: ");
-        for (int i = 0; i < newq.size(); i++) {
-            System.out.println("Process " + newq.get(i).getPid() + " Pri: " + newq.get(i).getPri() + " B: " + newq.get(i).getBurst() + " IO: " + newq.get(i).getiBurst());
-        }
-        //pronum = newq.size();
-        /**------------------------------------------------------------------------------ */
-        /**Step 3: Enter the ready queue */
-        /**We need to determine the size of the ready queue
-         * George*/
-        while (termq.size() < pronum) {
-            System.out.println("------------------ctime: " + ctime + "------------------"); //uncomment when ready queue is fixed
-            System.out.println("ready");
-
+            System.out.println("Newq: ");
+            for (int i = 0; i < newq.size(); i++) {
+                System.out.println("Process " + newq.get(i).getPid() + " Pri: " + newq.get(i).getPri() + " B: " + newq.get(i).getBurst() + " IO: " + newq.get(i).getiBurst());
+            }
+            //pronum = newq.size();
+            /**------------------------------------------------------------------------------ */
+            /**Step 3: Enter the ready queue */
+            /**We need to determine the size of the ready queue
+            * George*/
             // ask Wu for help -- we need to check if the newq is bigger OR smaller than the ready queue
 
             // check for all possible scenarios
