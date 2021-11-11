@@ -14,7 +14,7 @@ public class Process{
 
    public Process(){
        /**Default constructor */
-       /**Sophia S. Last Modified Date: 11/9/21 */ 
+       /**Created By: Sophia S. Last Modified Date: 11/9/21 */ 
        this.pid = 0;
        this.burst = 0;
        this.iburst = 0;
@@ -25,7 +25,7 @@ public class Process{
    }
 
    public Process(int p, int b, int i, int a, int e, int c, int cs){
-       /**Sophia S. Last Modified Date: 11/9/21 */ 
+       /**Created By: Sophia S. Last Modified Date: 11/9/21 */ 
        this.pid = p;
        this.burst = b;
        this.iburst = i;
@@ -35,7 +35,7 @@ public class Process{
        this.cs = cs;
    }
    /**All gets and sets:
-   /**Sophia S. Last Modified Date: 11/9/21 */ 
+   /**Created By: Sophia S. Last Modified Date: 11/9/21 */ 
    public int getPid(){return pid;}
    public int getBurst(){return burst;}
    public int getiBurst(){return iburst;}
@@ -50,6 +50,7 @@ public class Process{
    public void setExit(int e){this.exit = e;}
    public void setPri(int p){this.pri = p;}
    public void setCS(int cs){this.cs = cs;}
+   //Created By: Sophia S. Last Modified Date: 11/9/21
    public void printProcess(){
        System.out.println("Process "+pid+": ");
        System.out.println("Arrival: "+arrival);

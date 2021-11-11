@@ -36,7 +36,7 @@ public class Main{
         /**Step 1: Create Processes */
         /**CPU Burst times should be in range 1-10 */
         /**I/O Burst times should be in range 11-21 */
-        /**Sophia S. Last Modified Date: 11/11/21 */
+        /**Created By: Sophia S. Last Modified Date: 11/11/21 */
         /**Generates the random arrival/burst/io burst */
         for (int i = 0; i < pronum; i++) {
             int arrival = (int) (Math.random() * 6);
@@ -58,7 +58,7 @@ public class Main{
             -If two processes come in at the same time, whichever
             PID is closer to 0 will be put in front
             -Round robin priority is based off of this sort*/
-            /**Sophia S. Last Modified Date: 11/11/21 */
+            /**Created By: Sophia S. Last Modified Date: 11/11/21 */
             if(hold.size() > 0){
                 if(newq.size() < qsize){
                     for (int i = 0; i < qsize; i++) {
@@ -140,7 +140,7 @@ public class Main{
              *      upon this error within 30 minutes of testing is kinda incredible. I want to fix it, and I have some ideas to do it, but I'm not sure if they'll work and testing this thing
              *      (short of building a bogus ready queue full of custom-built Burst = 1 Processes) is gonna be a pain -- Note* -- wasn't actually that hard, just needed some creativity
              */
-            int p = (int)(Math.random()*ready.size());
+            /*int p = (int)(Math.random()*ready.size());
             System.out.println("Process: " + p); // testing
             System.out.println("Original Burst: " + ready.get(p).getBurst());
             int v;
@@ -178,12 +178,13 @@ public class Main{
                 ready.get(p).setBurst(ready.get(p).getBurst() + v); // add v to original Burst time: (New burst = old burst + [random value 1-10])
             }
             System.out.println("New burst time: " + ready.get(p).getBurst()); // testing
+            */
             
             /**----------------------------------------------------------------- */
             /**Step 5: Run the process in the time quantum.
              Finished? Move to terminated queue
              Still working? Move to waiting queue to process I/O wait*/
-            /**Sophia S. Last Modified Date: 11/11/21 */
+            /**Created By: Sophia S. Last Modified Date: 11/11/21 */
             if (ready.size() > 0) { //uncomment 114-216 when ready queue is fixed
                 if(runq.size() == 0) {
                     System.out.println("Interrupt issued.");
