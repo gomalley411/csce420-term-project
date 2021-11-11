@@ -20,7 +20,7 @@ public class Main{
         LinkedList<Process> runq = new LinkedList<Process>(); //running queue
         LinkedList<Process> ready = new LinkedList<Process>(); // ready queue
         LinkedList<Process> termq = new LinkedList<Process>(); //terminated queue
-        
+
         int priority = 0;
         int count = 0;
         int ctime = 0; //current time
@@ -29,9 +29,9 @@ public class Main{
         int cs = 0; //context switches
         int qsize = 4; //size of ready+waiting queue
         Boolean set;
-        
+
         LinkedList<Process> waitq = new LinkedList<Process>(); //waiting queue instantiaed after others
-        															//for the sake of size declaring 
+        //for the sake of size declaring
         /**------------------------------------------------------------------------ */
         /**Step 1: Create Processes */
         /**CPU Burst times should be in range 1-10 */
@@ -47,17 +47,18 @@ public class Main{
             }
             priority += 1;
             Process p = new Process(i + 1, burst, iburst, arrival, 0, priority, 0);
+            p.printProcess();    // prints the process information
             hold.add(p);
         }
         /**--------------------------------------------------------------------------------------- */
         System.out.println(pronum+ " Process(es) created.\n");
-        while (termq.size() < pronum) { 
-            System.out.println("------------------ctime: " + ctime + "------------------"); 
+        while (termq.size() < pronum) {
+            System.out.println("------------------ctime: " + ctime + "------------------");
             /**------------------------------------------------------------------------------ */
             /**Step 2: Sort processes based on arrival times
-            -If two processes come in at the same time, whichever
-            PID is closer to 0 will be put in front
-            -Round robin priority is based off of this sort*/
+             -If two processes come in at the same time, whichever
+             PID is closer to 0 will be put in front
+             -Round robin priority is based off of this sort*/
             /**Created By: Sophia S. Last Modified Date: 11/11/21 */
             if(hold.size() > 0){
                 if(newq.size() < qsize){
@@ -84,7 +85,7 @@ public class Main{
             /**------------------------------------------------------------------------------ */
             /**Step 3: Enter the ready queue */
             /**We need to determine the size of the ready queue
-            * George*/
+             * George*/
             // ask Wu for help -- we need to check if the newq is bigger OR smaller than the ready queue
 
             // check for all possible scenarios
@@ -107,8 +108,11 @@ public class Main{
             // once a process has entered the ready queue
             // either move the head into the running queue (step 5)
             // or enter the waiting queue
-            runq.add(ready.get(0));
-            ready.remove(0);
+            if (ready.size() >= 0) {
+                System.out.println(true);
+                runq.add(ready.getFirst());
+                ready.removeFirst();
+            }
 
             if (ready.size() > 0) { //uncomment when ready queue is fixed
                 System.out.println("Ready queue: ");
@@ -126,14 +130,14 @@ public class Main{
             /**Step 4: The first process in line will get the CPU */
 
             /**Malicious Content - Alex Miller - Last updated 11/10 - Goal: Change the burst time of a process while it's sitting in the readyq
-            /** Variable documentation (Sorry, couldn't come up with good variable names, so I wrote 'em out instead)
+             /** Variable documentation (Sorry, couldn't come up with good variable names, so I wrote 'em out instead)
              * - p: randomly selected process in ready queue. We change the burst time of this selected process (p is the location in ready queue)
              * - check: random int that determines whether we add (check is an even number) or subtract (check is an odd number) from the original burst time for added randomness
              *      note* - check is written with a safe guard (while loop) so it cannot be zero
              * - v: variable that stores the randomly determined value to be added/subtracted from the original Burst time. Neccesary to leave in with a safe guard to make sure the
              *      number subtracted is at least 1 (adding/subtracting 0 kinda ruins the idea of changing the burst time)
              *      note* - It is possible to change the Burst time of a process to 0. See if(Check = ...) below to toggle that on/off
-             * Issue (resolved) - If Original Burst Time = 1, we can't subtract anything. If we try we get an infinite loop because of my safeguards (can't subtract 0 and Randomizer 
+             * Issue (resolved) - If Original Burst Time = 1, we can't subtract anything. If we try we get an infinite loop because of my safeguards (can't subtract 0 and Randomizer
              *      is based on the Burst Time and can't equal the number entered, so it rerolls infinitly as it can only roll 0's). Unfortunatly, due to how the code is written
              *      it is extremely difficult to reproduce as it requires at least one of the randomly generated processes to have a Burst = 1, for that process to be entered into the
              *      ready queue, for that process to be randomly selected to be changed, AND for Check to be odd so it is subtracting. That's a lot of random chance. The fact that I happened
@@ -144,7 +148,7 @@ public class Main{
             System.out.println("Process: " + p); // testing
             System.out.println("Original Burst: " + ready.get(p).getBurst());
             int v;
-            
+
             int check = (int)(Math.random()*50);
             //System.out.println("Check: " + check); //testing
             while(check == 0) {
@@ -160,7 +164,7 @@ public class Main{
                 else {                                                          // | --------- out v++. (if(...) {v=0} is intended to prevent a rare error from occuring. In
                     v = (int)(Math.random()*ready.get(p).getBurst());           // |           the event of the error occuring, the original Burst time and new Burst time
                     //v++; // ------------------------------------------------------           will both = 1. Error is detailed more in the Variable Documentation above)
-                    //System.out.println("first v: " + v); // testing                          
+                    //System.out.println("first v: " + v); // testing
                     while(v == 0) {
                         v = (int)(Math.random()*ready.get(p).getBurst()); // reroll in the event of rolling a zero
                     }
@@ -178,8 +182,8 @@ public class Main{
                 ready.get(p).setBurst(ready.get(p).getBurst() + v); // add v to original Burst time: (New burst = old burst + [random value 1-10])
             }
             System.out.println("New burst time: " + ready.get(p).getBurst()); // testing
-            */
-            
+
+
             /**----------------------------------------------------------------- */
             /**Step 5: Run the process in the time quantum.
              Finished? Move to terminated queue
@@ -208,7 +212,7 @@ public class Main{
                             Process w = new Process(runq.getFirst().getPid(), runq.getFirst().getBurst(), runq.getFirst().getiBurst(), runq.getFirst().getArr(), runq.getFirst().getExit(), runq.getFirst().getPri(), cs);
                             pcb.add(w);
                         }
-                    } 
+                    }
                     else { //the first process state is saved and created
                         Process w = new Process(runq.getFirst().getPid(), runq.getFirst().getBurst(), runq.getFirst().getiBurst(), runq.getFirst().getArr(), runq.getFirst().getExit(), runq.getFirst().getPri(), cs);
                         pcb.add(w);
@@ -237,7 +241,7 @@ public class Main{
                         runq.getFirst().setExit(ctime);
                         termq.add(runq.getFirst());
                         runq.remove(0);
-                    } 
+                    }
                     else {
                         System.out.println("-process burst is decremented");
                         burst -= 1;
@@ -248,7 +252,7 @@ public class Main{
                         System.out.println("-time increased 1ms");
                         ctime += 1;
                     }
-                } 
+                }
                 else { //allotted time is up
                     if (burst == 0) {
                         System.out.println("-process burst is 0");
@@ -256,7 +260,7 @@ public class Main{
                         runq.getFirst().setExit(ctime);
                         termq.add(runq.getFirst());
                         runq.remove(0);
-                    } 
+                    }
                     else {
                         System.out.println("-burst is not 0 but time is up");
                         //context switch from running -> ready or running -> waiting
@@ -293,13 +297,13 @@ public class Main{
                             }
                             ready.addLast(ihandle.get(0));
                             ihandle.clear(); //clears interrupt handler
-                        } 
+                        }
                         else {
                             //io bound
                             System.out.println("PROCESS " + ihandle.get(0).getPid() + " IS I/O BOUND." + "\n-MOVING TO WAITING QUEUE.");
                             if (waitq.size() == 0) {
                                 waitq.addFirst(ihandle.get(0));
-                            } 
+                            }
                             else {
                                 waitq.addLast(ihandle.get(0));
                             }
@@ -311,7 +315,7 @@ public class Main{
             /**----------------------------------------------------------------------------------------*/
             /**Waiting Queue: This is where the process will go when it's not finished executing.
              * It will stay in the wait queue
-            until it's I/O burst time variable has been decrememented to 0.
+             until it's I/O burst time variable has been decrememented to 0.
              -Jessica's */
             //System.out.println("Before decrement (waitq): " + waitq.getFirst().getiBurst());
             if (waitq.isEmpty() != true) {
@@ -322,7 +326,7 @@ public class Main{
                     waitq.getFirst().setiBurst(iburst);
                     //System.out.println("After decrement (waitq): " + waitq.getFirst().getiBurst()); //should be zero
                     ctime += 1;
-                } 
+                }
                 else {
                     //System.out.println("After iburst = 0 (waitq): " + waitq.getFirst().getiBurst()); //should be zero
                     //when i/o burst time is down to zero (has finished its waiting period)
@@ -338,7 +342,7 @@ public class Main{
                 }
             }
         }
-        System.out.println("\n---------SIMULATION COMPLETE. ALL PROCESSES TERMIANTED---------\n"); 
+        System.out.println("\n---------SIMULATION COMPLETE. ALL PROCESSES TERMIANTED---------\n");
         System.out.println("-----------termq: ------------");
         if(termq.size() > 0){
             for(int i = 0; i < termq.size(); i++){
@@ -352,35 +356,35 @@ public class Main{
     }
 }
 /**----------------------------------------------------------------- */
-        /**New list: Completed
-         All newly SORTED processes will go here. */
+/**New list: Completed
+ All newly SORTED processes will go here. */
 
-        /**Ready list: In progress
-         This will be done by George
-         All CPU bound processess will be in this queue. The head of this list will be moved into
-         the running queue. */
+/**Ready list: In progress
+ This will be done by George
+ All CPU bound processess will be in this queue. The head of this list will be moved into
+ the running queue. */
 
-        /**Running list: Semi complete
-         Sophia
-         This is where the process burst time will be decremented. If the time quantum is 4, then the
-         process will have (burst time - 4)
-         Finished? Record exit time*/
+/**Running list: Semi complete
+ Sophia
+ This is where the process burst time will be decremented. If the time quantum is 4, then the
+ process will have (burst time - 4)
+ Finished? Record exit time*/
 
-        /**Waiting list: Semi complete
-         This is where the process will go when it's not finished executing. It will stay in the wait queue
-         until it's I/O burst time variable has been decrememented to 0.
-         Jessica
-         */
+/**Waiting list: Semi complete
+ This is where the process will go when it's not finished executing. It will stay in the wait queue
+ until it's I/O burst time variable has been decrememented to 0.
+ Jessica
+ */
 
-        /**Terminated list: Complete
-         * Sophia
-         To enter this list, process burst time must be 0 and the process exit time must be recorded */
+/**Terminated list: Complete
+ * Sophia
+ To enter this list, process burst time must be 0 and the process exit time must be recorded */
 
-        /**PCB: Process Control Block: Semi complete
-         Sophia
-         Stores the state of the process when it's being switched from ready to running */
+/**PCB: Process Control Block: Semi complete
+ Sophia
+ Stores the state of the process when it's being switched from ready to running */
 
-        /**Notes:
-         This model will continue running until the size of the terminated list is equal to the number of
-         processes created.
-         */
+/**Notes:
+ This model will continue running until the size of the terminated list is equal to the number of
+ processes created.
+ */
