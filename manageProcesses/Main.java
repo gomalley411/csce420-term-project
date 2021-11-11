@@ -17,6 +17,7 @@ public class Main{
         List<Process> pcb = new ArrayList<Process>(); //process control block
         LinkedList<Process> newq = new LinkedList<Process>(); //final sorted processes go here
         LinkedList<Process> runq = new LinkedList<Process>(); //running queue
+        LinkedList<Process> ready = new LinkedList<Process>(); // ready queue
         LinkedList<Process> termq = new LinkedList<Process>(); //terminated queue
 
         int priority = 0;
@@ -80,21 +81,38 @@ public class Main{
         /**Step 3: Enter the ready queue */
         /**We need to determine the size of the ready queue
          * George*/
-        LinkedList<Process> ready = new LinkedList<Process>(qsize); // ready queue
-        while (termq.size() < pronum) { //uncomment when ready queue is fixed
+        while (termq.size() < pronum) {
             System.out.println("------------------ctime: " + ctime + "------------------"); //uncomment when ready queue is fixed
             System.out.println("ready");
-            for (int i = 0; i < 4; i++) {
-                ready.add(newq.get(i));
-                // this is for testing only
-                //System.out.println("Process "+ ready.get(i).getPid() + " Pri: " + ready.get(i).getPri() +" B: " + ready.get(i).getBurst() +" ");
+
+            // ask Wu for help -- we need to check if the newq is bigger OR smaller than the ready queue
+
+            // if they are the same size
+            if (newq.size() == qsize) {
+                for (int i = 0; i < newq.size(); i++) {
+                    ready.add(newq.get(i));
+                    newq.remove(newq.get(i));   // removes the process from the new queue
+                    // this is for testing only
+                    //System.out.println("Process "+ ready.get(i).getPid() + " Pri: " + ready.get(i).getPri() +" B: " + ready.get(i).getBurst() +" ");
+                }
             }
+            else if (newq.size() > qsize) { // if the newq is greater than the ready queue will be
+                for (int i = 0; i < qsize; i++) {
+                    ready.add(newq.get(i));
+                    newq.remove(newq.get(i));
+                }
+            }
+            else {  // if the newq is less than the ready queue will be
+                // maybe move process to ready queue and then once done change qsize to the ready queue size??? IDK
+            }
+            Collections.sort(ready, Comparator.comparing(Process::getPri)); // sort the ready queue by priority
+
             // once a process has entered the ready queue
             // either move the head into the running queue (step 5)
             // or enter the waiting queue
             runq.add(ready.get(0));
             ready.remove(0);
-            
+
             if (ready.size() > 0) { //uncomment when ready queue is fixed
                 System.out.println("Ready queue: ");
                 for (int i = 0; i < ready.size(); i++) {
