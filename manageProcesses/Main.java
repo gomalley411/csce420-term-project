@@ -15,7 +15,7 @@ public class Main{
         LinkedList<Process> hold = new LinkedList<Process>(); //new processes stored here
         List<Process> ihandle = new ArrayList<Process>(); //this is the interrupt handler
         List<Process> ihandle2 = new ArrayList<Process>();
-        List<Process> pcb = new List<Process>(); //process control block
+        List<Process> pcb = new ArrayList<Process>(); //process control block
         LinkedList<Process> obuffer = new LinkedList<Process>(); //overflow buffer for waitq is here
         LinkedList<Process> newq = new LinkedList<Process>(); //final sorted processes go here
         LinkedList<Process> runq = new LinkedList<Process>(); //running queue
@@ -297,7 +297,7 @@ public class Main{
                             	}
                             }
                         }
-                        if(obuffer.size != 0) { //try to put overflow into waitq at end of every round if there is any
+                        if(obuffer.size() != 0) { //try to put overflow into waitq at end of every round if there is any
                         	if(waitq.size() < qsize){
                         		waitq.addLast(obuffer.get(0));
                         		obuffer.clear(); //clears overflow buffer
