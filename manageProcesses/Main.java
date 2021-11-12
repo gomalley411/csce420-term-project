@@ -82,37 +82,34 @@ public class Main{
             }
             /**------------------------------------------------------------------------------ */
             /**Step 3: Enter the ready queue */
-            /**We need to determine the size of the ready queue
-             * George*/
-            // ask Wu for help -- we need to check if the newq is bigger OR smaller than the ready queue
-            
-            // check for all possible scenarios
-            if (newq.size() <= qsize) {
-                for (int i = 0; i < newq.size(); i++) {
-                    ready.add(newq.get(i));
-                    newq.remove(newq.get(i));   // removes the process from the new queue
-                    // this is for testing only
-                    //System.out.println("Process "+ ready.get(i).getPid() + " Pri: " + ready.get(i).getPri() +" B: " + ready.get(i).getBurst() +" ");
+            if (!newq.isEmpty()) {  // if the new queue is not empty
+                if (ready.size() < 3) { // if the ready queue has an open space
+                    // add the process to the ready queue
+                    for (int i = 0; i < newq.size(); i++) { // remove the process from the new queue
+                        if (newq.size() <= qsize) {
+                            //System.out.println("Removing index " + newq.get(i).getPid() + " from new queue");
+                            newq.remove(i);
+                        }
+                        if (!ready.contains(newq.get(i))) { // this fixed an issue with the ready queue having duplicate processes
+                            //System.out.println("adding process to ready queue with PID " + newq.get(i).getPid());
+                            ready.add(newq.get(i)); // this populates the queue
+                        }
+                    }
                 }
             }
-            else if (newq.size() > qsize) { // if the newq is greater than the ready queue will be
-                for (int i = 0; i < qsize; i++) {
-                    ready.add(newq.get(i));
-                    newq.remove(newq.get(i));
-                }
-            }
+
             Collections.sort(ready, Comparator.comparing(Process::getPri)); // sort the ready queue by priority
 
             // once a process has entered the ready queue
             // either move the head into the running queue (step 5)
             // or enter the waiting queue
-            if (ready.size() >= 0) {
-                System.out.println(true);
-                runq.add(ready.getFirst());
+            if (ready.size() >= 1) {
+                //System.out.println("ready size: " + ready.size());
                 ready.removeFirst();
+                newq.remove(0);
             }
-            
-            if (ready.size() > 0) { //uncomment when ready queue is fixed
+
+            if (ready.size() > 0) {
                 System.out.println("Ready queue: ");
                 for (int i = 0; i < ready.size(); i++) {
                     System.out.println("Process " + ready.get(i).getPid() + " Pri: " + ready.get(i).getPri() + " B: " + ready.get(i).getBurst() + " IO: " + ready.get(i).getiBurst());
