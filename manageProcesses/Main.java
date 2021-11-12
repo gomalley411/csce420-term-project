@@ -25,7 +25,7 @@ public class Main{
         int count = 0;
         int ctime = 0; //current time
         int quantum = 4; //time quantum
-        int pronum = 5; //number of processes
+        int pronum = 9; //number of processes
         int cs = 0; //context switches
         int qsize = 4; //size of ready+waiting queue
         Boolean set;
@@ -47,7 +47,6 @@ public class Main{
             }
             priority += 1;
             Process p = new Process(i + 1, burst, iburst, arrival, 0, priority, 0);
-            p.printProcess();    // prints the process information
             hold.add(p);
         }
         /**--------------------------------------------------------------------------------------- */
@@ -81,13 +80,12 @@ public class Main{
             for (int i = 0; i < newq.size(); i++) {
                 System.out.println("Process " + newq.get(i).getPid() + " Pri: " + newq.get(i).getPri() + " B: " + newq.get(i).getBurst() + " IO: " + newq.get(i).getiBurst());
             }
-            //pronum = newq.size();
             /**------------------------------------------------------------------------------ */
             /**Step 3: Enter the ready queue */
             /**We need to determine the size of the ready queue
              * George*/
             // ask Wu for help -- we need to check if the newq is bigger OR smaller than the ready queue
-
+            
             // check for all possible scenarios
             if (newq.size() <= qsize) {
                 for (int i = 0; i < newq.size(); i++) {
@@ -113,17 +111,11 @@ public class Main{
                 runq.add(ready.getFirst());
                 ready.removeFirst();
             }
-
+            
             if (ready.size() > 0) { //uncomment when ready queue is fixed
                 System.out.println("Ready queue: ");
                 for (int i = 0; i < ready.size(); i++) {
                     System.out.println("Process " + ready.get(i).getPid() + " Pri: " + ready.get(i).getPri() + " B: " + ready.get(i).getBurst() + " IO: " + ready.get(i).getiBurst());
-                }
-            }
-            if (newq.size() > 0) {
-                System.out.println("Newq: ");
-                for (int i = 0; i < newq.size(); i++) {
-                    System.out.println("Process " + newq.get(i).getPid() + " Pri: " + newq.get(i).getPri() + " B: " + newq.get(i).getBurst() + " IO: " + newq.get(i).getiBurst());
                 }
             }
             //-------------------------------------------------------------------------*/
