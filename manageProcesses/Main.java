@@ -83,7 +83,7 @@ public class Main{
             /**------------------------------------------------------------------------------ */
             /**Step 3: Enter the ready queue */
             if (!newq.isEmpty()) {  // if the new queue is not empty
-                if (ready.size() < 3) { // if the ready queue has an open space
+                if (ready.size() < qsize) { // if the ready queue has an open space
                     // add the process to the ready queue
                     for (int i = 0; i < newq.size(); i++) { // remove the process from the new queue
                         if (newq.size() <= qsize) {
