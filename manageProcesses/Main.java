@@ -80,34 +80,27 @@ public class Main{
             for (int i = 0; i < newq.size(); i++) {
                 System.out.println("Process " + newq.get(i).getPid() + " Pri: " + newq.get(i).getPri() + " B: " + newq.get(i).getBurst() + " IO: " + newq.get(i).getiBurst());
             }
+
             /**------------------------------------------------------------------------------ */
             /**Step 3: Enter the ready queue */
-            if (!newq.isEmpty()) {  // if the new queue is not empty
-                if (ready.size() < qsize) { // if the ready queue has an open space
-                    // add the process to the ready queue
-                    for (int i = 0; i < newq.size(); i++) { // remove the process from the new queue
-                        if (newq.size() <= qsize) {
-                            //System.out.println("Removing index " + newq.get(i).getPid() + " from new queue");
-                            newq.remove(i);
-                        }
-                        if (!ready.contains(newq.get(i))) { // this fixed an issue with the ready queue having duplicate processes
-                            //System.out.println("adding process to ready queue with PID " + newq.get(i).getPid());
-                            ready.add(newq.get(i)); // this populates the queue
-                        }
-                    }
+            // get the first qsize amount of processes and add to ready queue
+            // process #qsize+1 should stay in hold
+            for (int a = 0; a < qsize && newq.size() != 0; a++) {
+                Process p = newq.get(0);
+                if (ready.size() < qsize) {
+                    ready.add(p);
+                    System.out.println("PROCESS "+p.getPid() + " MOVED TO READY QUEUE.");
+                    newq.remove(0);
                 }
             }
+
 
             Collections.sort(ready, Comparator.comparing(Process::getPri)); // sort the ready queue by priority
 
             // once a process has entered the ready queue
             // either move the head into the running queue (step 5)
             // or enter the waiting queue
-            if (ready.size() >= 1) {
-                //System.out.println("ready size: " + ready.size());
-                ready.removeFirst();
-                newq.remove(0);
-            }
+
 
             if (ready.size() > 0) {
                 System.out.println("Ready queue: ");
@@ -178,7 +171,7 @@ public class Main{
              Finished? Move to terminated queue
              Still working? Move to waiting queue to process I/O wait*/
             /**Created By: Sophia S. Last Modified Date: 11/11/21 */
-            if (ready.size() > 0) { //uncomment 114-216 when ready queue is fixed
+            if (ready.size() > 0) {
                 if(runq.size() == 0) {
                     System.out.println("Interrupt issued.");
                     ihandle.add(ready.getFirst()); //interrupt handle
