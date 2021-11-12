@@ -331,7 +331,9 @@ public class Main{
                     //System.out.println("After iburst = 0 (waitq): " + waitq.getFirst().getiBurst()); //should be zero
                     //when i/o burst time is down to zero (has finished its waiting period)
                     System.out.println("iburst is 0");
-                    ready.add(waitq.getFirst()); //go back to the ready queue after done waiting for i/o
+                    System.out.println("Waitq Interrupt issued.");
+                    ihandle.add(waitq.getFirst()); //interrupt handle
+                    ready.add(ihandle.get(0)); //add to ready queue
                     waitq.removeFirst();//get the waitq item that finished off the waitq so another waitq item can run
                 }
                 System.out.println("waitq: ");
@@ -342,7 +344,7 @@ public class Main{
                 }
             }
         }
-        System.out.println("\n---------SIMULATION COMPLETE. ALL PROCESSES TERMIANTED---------\n");
+        System.out.println("\n---------SIMULATION COMPLETE. ALL PROCESSES TERMINATED---------\n");
         System.out.println("-----------termq: ------------");
         if(termq.size() > 0){
             for(int i = 0; i < termq.size(); i++){
