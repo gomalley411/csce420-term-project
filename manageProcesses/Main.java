@@ -335,6 +335,7 @@ public class Main{
                     ihandle.add(waitq.getFirst()); //interrupt handle
                     ready.add(ihandle.get(0)); //add to ready queue
                     waitq.removeFirst();//get the waitq item that finished off the waitq so another waitq item can run
+                    ihandle.clear(); //clears interrupt handler
                 }
                 System.out.println("waitq: ");
                 if (waitq.size() > 0) {
