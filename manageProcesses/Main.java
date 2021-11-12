@@ -15,10 +15,12 @@ public class Main{
         LinkedList<Process> hold = new LinkedList<Process>(); //new processes stored here
         List<Process> ihandle = new ArrayList<Process>(); //this is the interrupt handler
         List<Process> ihandle2 = new ArrayList<Process>();
-        List<Process> pcb = new ArrayList<Process>(); //process control block
+        List<Process> pcb = new List<Process>(); //process control block
+        LinkedList<Process> obuffer = new LinkedList<Process>(); //overflow buffer for waitq is here
         LinkedList<Process> newq = new LinkedList<Process>(); //final sorted processes go here
         LinkedList<Process> runq = new LinkedList<Process>(); //running queue
         LinkedList<Process> ready = new LinkedList<Process>(); // ready queue
+        LinkedList<Process> waitq = new LinkedList<Process>();
         LinkedList<Process> termq = new LinkedList<Process>(); //terminated queue
 
         int priority = 0;
@@ -30,8 +32,6 @@ public class Main{
         int qsize = 4; //size of ready+waiting queue
         Boolean set;
 
-        LinkedList<Process> waitq = new LinkedList<Process>(); //waiting queue instantiaed after others
-        //for the sake of size declaring
         /**------------------------------------------------------------------------ */
         /**Step 1: Create Processes */
         /**CPU Burst times should be in range 1-10 */
@@ -285,11 +285,23 @@ public class Main{
                             System.out.println("PROCESS " + ihandle.get(0).getPid() + " IS I/O BOUND." + "\n-MOVING TO WAITING QUEUE.");
                             if (waitq.size() == 0) {
                                 waitq.addFirst(ihandle.get(0));
+                                ihandle.clear(); //clears the interrupt handler
                             }
                             else {
-                                waitq.addLast(ihandle.get(0));
+                            	if(waitq.size() < qsize){
+                            		waitq.addLast(ihandle.get(0));
+                            		ihandle.clear(); //clears the interrupt handler
+                            	}
+                            	else { //if waitq is full, try a little overflow buffer
+                            		obuffer.addLast(ihandle.get(0)); //holds overflow so it doesn't run again while waiting to be put in wait
+                            	}
                             }
-                            ihandle.clear(); //clears the interrupt handler
+                        }
+                        if(obuffer.size != 0) { //try to put overflow into waitq at end of every round if there is any
+                        	if(waitq.size() < qsize){
+                        		waitq.addLast(obuffer.get(0));
+                        		obuffer.clear(); //clears overflow buffer
+                        	}
                         }
                     }
                 }
