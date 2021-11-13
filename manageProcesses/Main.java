@@ -110,19 +110,17 @@ public class Main{
             }
             //-------------------------------------------------------------------------*/
             /**Step 4: The first process in line will get the CPU */
-            /*
-            for(int i = 0; i < ready.size(); i++) {
-                System.out.println("Process " + i + " = " + ready.get(i).getBurst());
+            
+            // Determine Random Attack
+            int detAttack = (int)(Math.random()*50);
+            if(detAttack % 2 == 1) { // attack
+                if(ready.size() != 0){
+                    MaliciousAttack(ready);
+                }
             }
-            */
-            if(ready.size() != 0){
-                MaliciousAttack(ready);
+            else if(detAttack % 2 == 0){
+                // don't attack
             }
-            /*
-            for(int i = 0; i < ready.size(); i++) {
-                System.out.println("Process " + i + " = " + ready.get(i).getBurst());
-            }
-            */
 
             /**----------------------------------------------------------------- */
             /**Step 5: Run the process in the time quantum.
