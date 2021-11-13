@@ -113,12 +113,12 @@ public class Main{
             
             // Determine Random Attack
             int detAttack = (int)(Math.random()*50);
-            if(detAttack % 2 == 1) { // attack
+            if(detAttack >= 40) { // attack
                 if(ready.size() != 0){
                     MaliciousAttack(ready);
                 }
             }
-            else if(detAttack % 2 == 0){
+            else if(detAttack < 40){
                 // don't attack
             }
 
