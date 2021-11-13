@@ -12,15 +12,17 @@ George O.
 public class Main{
     public static void main(String[] args) {
         /**Initializations */
-        LinkedList<Process> hold = new LinkedList<Process>(); //new processes stored here
+        LinkedList<Process> hold = new LinkedList<Process>(); //buffer for all the newly created processes to stay in until they go to newq
         List<Process> ihandle = new ArrayList<Process>(); //this is the interrupt handler
-        List<Process> ihandle2 = new ArrayList<Process>();
+        List<Process> ihandle2 = new ArrayList<Process>(); //another interrupt handler
         List<Process> pcb = new ArrayList<Process>(); //process control block
-        LinkedList<Process> obuffer = new LinkedList<Process>(); //overflow buffer for waitq is here
+        LinkedList<Process> obuffer = new LinkedList<Process>(); //overflow buffer for waitq is here. Isn't needed 
+        														 //because of how our time with our processes is managed, 
+        														//and is implemented for detail's sake only
         LinkedList<Process> newq = new LinkedList<Process>(); //final sorted processes go here
         LinkedList<Process> runq = new LinkedList<Process>(); //running queue
         LinkedList<Process> ready = new LinkedList<Process>(); // ready queue
-        LinkedList<Process> waitq = new LinkedList<Process>();
+        LinkedList<Process> waitq = new LinkedList<Process>(); //waitq
         LinkedList<Process> termq = new LinkedList<Process>(); //terminated queue
 
         int priority = 0;
@@ -338,7 +340,7 @@ public class Main{
              * It will stay in the wait queue
              until it's I/O burst time variable has been decrememented to 0.
              -Jessica's */
-            if (waitq.isEmpty() != true) {
+            if (waitq.isEmpty() != true) { // if it isn't empty then decrement the process iburts time in here
                 int iburst = waitq.getFirst().getiBurst();
                 if (iburst > 0) {
                     iburst = iburst - 1;
@@ -358,7 +360,7 @@ public class Main{
                 System.out.println("waitq: ");
                 if (waitq.size() > 0) {
                     for (int i = 0; i < waitq.size(); i++) {
-                        System.out.println("Process " + waitq.get(i).getPid() + " Pri: " + waitq.get(i).getPri() + " B: " + waitq.get(i).getBurst() + " IO: " + waitq.get(i).getiBurst());
+                        System.out.println("Process " + waitq.get(i).getPid() + " Pri: " + waitq.get(i).getPri() + " B: " + waitq.get(i).getBurst() + " IO: " + waitq.get(i).getiBurst()); //printing info about the stuff in waitq
                     }
                 }
             }
@@ -391,7 +393,7 @@ public class Main{
  process will have (burst time - 4)
  Finished? Record exit time*/
 
-/**Waiting list: Semi complete
+/**Waiting list: Complete
  This is where the process will go when it's not finished executing. It will stay in the wait queue
  until it's I/O burst time variable has been decrememented to 0.
  Jessica
