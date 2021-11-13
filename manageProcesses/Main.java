@@ -27,7 +27,7 @@ public class Main{
         int count = 0;
         int ctime = 0; //current time
         int quantum = 4; //time quantum
-        int pronum = 5; //number of processes
+        int pronum = 36; //number of processes
         int cs = 0; //context switches
         int qsize = 4; //size of ready+waiting queue
         Boolean set;
@@ -368,7 +368,7 @@ public class Main{
         System.out.println("-----------termq: ------------");
         if(termq.size() > 0){
             for(int i = 0; i < termq.size(); i++){
-                System.out.println("Process "+ termq.get(i).getPid() + " Pri: " + termq.get(i).getPri() +" B: " + termq.get(i).getBurst() +" Exit: " + termq.get(i).getExit() + " CS: " + termq.get(i).getCS());
+                System.out.println("Process "+ termq.get(i).getPid() + " Pri: " + termq.get(i).getPri() +" B: " + termq.get(i).getBurst() +" Exit: " + termq.get(i).getExit());
             }
         }
         System.out.println("-----------pcb: ------------");
