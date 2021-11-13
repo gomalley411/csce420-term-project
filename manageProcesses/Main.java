@@ -27,7 +27,7 @@ public class Main{
         int count = 0;
         int ctime = 0; //current time
         int quantum = 4; //time quantum
-        int pronum = 9; //number of processes
+        int pronum = 5; //number of processes
         int cs = 0; //context switches
         int qsize = 4; //size of ready+waiting queue
         Boolean set;
@@ -100,7 +100,6 @@ public class Main{
             // once a process has entered the ready queue
             // either move the head into the running queue (step 5)
             // or enter the waiting queue
-
 
             if (ready.size() > 0) {
                 System.out.println("Ready queue: ");
@@ -178,7 +177,7 @@ public class Main{
                     runq.add(ihandle.get(0)); //add to running queue
                     cs = runq.getFirst().getCS() + 1; //add context switch
                     set = false; //has not been set in pcb list yet
-                    if (pcb.size() > 0) { //PCB implementation
+                    if(pcb.size() > 0) { //PCB implementation
                         for (int i = 0; i < pcb.size(); i++) {
                             if (pcb.get(i).getPid() == runq.getFirst().getPid()) {
                                 pcb.get(i).setBurst(runq.getFirst().getBurst());
@@ -190,12 +189,15 @@ public class Main{
                                 set = true; //the state is saved and the switch is made
                             }
                         }
-                        if (set == false) { //new process is created if process isn't in pcb already
+                        System.out.println(set);
+                        if(set == false) { //new process is created if process isn't in pcb already
+                            System.out.println("NEW PCB PROCESS STATE SAVED");
                             Process w = new Process(runq.getFirst().getPid(), runq.getFirst().getBurst(), runq.getFirst().getiBurst(), runq.getFirst().getArr(), runq.getFirst().getExit(), runq.getFirst().getPri(), cs);
                             pcb.add(w);
                         }
                     }
                     else { //the first process state is saved and created
+                        System.out.println("NEW PCB PROCESS STATE SAVED");
                         Process w = new Process(runq.getFirst().getPid(), runq.getFirst().getBurst(), runq.getFirst().getiBurst(), runq.getFirst().getArr(), runq.getFirst().getExit(), runq.getFirst().getPri(), cs);
                         pcb.add(w);
                     }
@@ -273,6 +275,32 @@ public class Main{
                                 ihandle2.add(ready.getFirst());
                                 System.out.println("PROCESS "+ihandle2.get(0).getPid() + " MOVED TO RUNNING QUEUE.");
                                 runq.add(ihandle2.get(0)); //add to running queue
+                                //context switch from ready -> running
+                                cs = runq.getFirst().getCS() + 1; //add context switch
+                                set = false;
+                                if (pcb.size() > 0) { //PCB implementation
+                                    for (int i = 0; i < pcb.size(); i++) {
+                                        if (pcb.get(i).getPid() == runq.getFirst().getPid()) {
+                                            pcb.get(i).setBurst(runq.getFirst().getBurst());
+                                            pcb.get(i).setiBurst(runq.getFirst().getiBurst());
+                                            pcb.get(i).setArr(runq.getFirst().getArr());
+                                            pcb.get(i).setExit(runq.getFirst().getExit());
+                                            pcb.get(i).setPri(runq.getFirst().getPri());
+                                            pcb.get(i).setCS(cs);
+                                            set = true;
+                                        }
+                                    }
+                                    //this conditional is here bc it may be going ready -> running for the first time
+                                    if(set == false){ 
+                                       //the first process state is saved and created
+                                        System.out.println("NEW PCB PROCESS STATE SAVED");
+                                        Process w = new Process(runq.getFirst().getPid(), runq.getFirst().getBurst(), runq.getFirst().getiBurst(), runq.getFirst().getArr(), runq.getFirst().getExit(), runq.getFirst().getPri(), cs);
+                                        pcb.add(w);
+                                    }
+                                }
+                                System.out.println("-1ms added for context switch.");
+                                ctime += 1;
+                                System.out.println("------------------ctime: " + ctime + "------------------");
                                 ready.removeFirst();
                                 ihandle2.clear();
                                 count = 0;
@@ -311,18 +339,15 @@ public class Main{
              * It will stay in the wait queue
              until it's I/O burst time variable has been decrememented to 0.
              -Jessica's */
-            //System.out.println("Before decrement (waitq): " + waitq.getFirst().getiBurst());
             if (waitq.isEmpty() != true) {
                 int iburst = waitq.getFirst().getiBurst();
                 if (iburst > 0) {
                     iburst = iburst - 1;
                     System.out.println("-I/O burst decremented." + "\n-time increased 1ms");
                     waitq.getFirst().setiBurst(iburst);
-                    //System.out.println("After decrement (waitq): " + waitq.getFirst().getiBurst()); //should be zero
                     ctime += 1;
                 }
                 else {
-                    //System.out.println("After iburst = 0 (waitq): " + waitq.getFirst().getiBurst()); //should be zero
                     //when i/o burst time is down to zero (has finished its waiting period)
                     System.out.println("iburst is 0");
                     System.out.println("Waitq Interrupt issued.");
@@ -343,7 +368,7 @@ public class Main{
         System.out.println("-----------termq: ------------");
         if(termq.size() > 0){
             for(int i = 0; i < termq.size(); i++){
-                System.out.println("Process "+ termq.get(i).getPid() + " Pri: " + termq.get(i).getPri() +" B: " + termq.get(i).getBurst() +" Exit: " + termq.get(i).getExit());
+                System.out.println("Process "+ termq.get(i).getPid() + " Pri: " + termq.get(i).getPri() +" B: " + termq.get(i).getBurst() +" Exit: " + termq.get(i).getExit() + " CS: " + termq.get(i).getCS());
             }
         }
         System.out.println("-----------pcb: ------------");
