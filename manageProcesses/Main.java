@@ -110,61 +110,19 @@ public class Main{
             }
             //-------------------------------------------------------------------------*/
             /**Step 4: The first process in line will get the CPU */
-
-            /**Malicious Content - Alex Miller - Last updated 11/10 - Goal: Change the burst time of a process while it's sitting in the readyq
-             /** Variable documentation (Sorry, couldn't come up with good variable names, so I wrote 'em out instead)
-             * - p: randomly selected process in ready queue. We change the burst time of this selected process (p is the location in ready queue)
-             * - check: random int that determines whether we add (check is an even number) or subtract (check is an odd number) from the original burst time for added randomness
-             *      note* - check is written with a safe guard (while loop) so it cannot be zero
-             * - v: variable that stores the randomly determined value to be added/subtracted from the original Burst time. Neccesary to leave in with a safe guard to make sure the
-             *      number subtracted is at least 1 (adding/subtracting 0 kinda ruins the idea of changing the burst time)
-             *      note* - It is possible to change the Burst time of a process to 0. See if(Check = ...) below to toggle that on/off
-             * Issue (resolved) - If Original Burst Time = 1, we can't subtract anything. If we try we get an infinite loop because of my safeguards (can't subtract 0 and Randomizer
-             *      is based on the Burst Time and can't equal the number entered, so it rerolls infinitly as it can only roll 0's). Unfortunatly, due to how the code is written
-             *      it is extremely difficult to reproduce as it requires at least one of the randomly generated processes to have a Burst = 1, for that process to be entered into the
-             *      ready queue, for that process to be randomly selected to be changed, AND for Check to be odd so it is subtracting. That's a lot of random chance. The fact that I happened
-             *      upon this error within 30 minutes of testing is kinda incredible. I want to fix it, and I have some ideas to do it, but I'm not sure if they'll work and testing this thing
-             *      (short of building a bogus ready queue full of custom-built Burst = 1 Processes) is gonna be a pain -- Note* -- wasn't actually that hard, just needed some creativity
-             */
-            /*int p = (int)(Math.random()*ready.size());
-            System.out.println("Process: " + p); // testing
-            System.out.println("Original Burst: " + ready.get(p).getBurst());
-            int v;
-
-            int check = (int)(Math.random()*50);
-            //System.out.println("Check: " + check); //testing
-            while(check == 0) {
-                check = (int)(Math.random()*50); // keep rerolling so check is at least 1 (we want to make sure the burst time changes so if we roll a zero, it kinda defeats the point)
+            /*
+            for(int i = 0; i < ready.size(); i++) {
+                System.out.println("Process " + i + " = " + ready.get(i).getBurst());
             }
-            //System.out.println("Check value: " + check); // testing
-            if(check % 2 == 1) { // check is an odd number, subtract from burst time
-                // check size of burst time prior to subvtracting so we don't go negative
-                //System.out.println("Old Burst Time: " + ready.get(p).getBurst()); // testing
-                if(ready.get(p).getBurst() == 1) {
-                    v = 0; // ------------------------------------------------------           If we want Burst Time to be reducable to zero, set v = 1 and uncomment v++
-                }                                                               // |           If we don't want Burst Time to be reducible to zero, set v = 0 and comment
-                else {                                                          // | --------- out v++. (if(...) {v=0} is intended to prevent a rare error from occuring. In
-                    v = (int)(Math.random()*ready.get(p).getBurst());           // |           the event of the error occuring, the original Burst time and new Burst time
-                    //v++; // ------------------------------------------------------           will both = 1. Error is detailed more in the Variable Documentation above)
-                    //System.out.println("first v: " + v); // testing
-                    while(v == 0) {
-                        v = (int)(Math.random()*ready.get(p).getBurst()); // reroll in the event of rolling a zero
-                    }
-                }
-                //System.out.println("final v: " + v); // testing
-                ready.get(p).setBurst(ready.get(p).getBurst() - v); // subtract v from original burst time: (New burst = old burst - [random value that is less than old burst])
+            */
+            if(ready.size() != 0){
+                MaliciousAttack(ready);
             }
-            else if(check % 2 == 0) { // check is an even number, add to burst time
-                v = (int)(Math.random()*10); // 10 is arbitrary and can be changed, I just thought more than 10 added to Burst time would be kinda insane
-                //System.out.println("First v: " + v); // testing
-                while(v == 0) {
-                    v = (int)(Math.random()*10); // reroll in the event of getting a zero
-                }
-                //System.out.println("Final v: " + v); // testing
-                ready.get(p).setBurst(ready.get(p).getBurst() + v); // add v to original Burst time: (New burst = old burst + [random value 1-10])
+            /*
+            for(int i = 0; i < ready.size(); i++) {
+                System.out.println("Process " + i + " = " + ready.get(i).getBurst());
             }
-            System.out.println("New burst time: " + ready.get(p).getBurst()); // testing
-
+            */
 
             /**----------------------------------------------------------------- */
             /**Step 5: Run the process in the time quantum.
@@ -376,6 +334,63 @@ public class Main{
         for(int i = 0; i < pcb.size(); i++){
             System.out.println("Process "+ pcb.get(i).getPid() + " CS: "+ pcb.get(i).getCS());
         }
+    }
+        /**Malicious Content - Alex Miller - Last updated 11/12 - Goal: Change the burst time of a process while it's sitting in the readyq then compare it to the Burst time in the pcb (last
+    * saved state) */
+    /** Variable documentation
+    * - p: randomly selected process in ready queue. We change the burst time of this selected process (p is the location in ready queue)
+    * - check: random int that determines whether we add (check is an even number) or subtract (check is an odd number) from the original burst time for added randomness
+    *      note* - check is written with a safe guard (while loop) so it cannot be zero
+    * - v: variable that stores the randomly determined value to be added/subtracted from the original Burst time. Neccesary to leave in with a safe guard to make sure the
+    *      number subtracted is at least 1 (adding/subtracting 0 kinda ruins the idea of changing the burst time)
+    *      note* - the Burst time can be changed to zero depending on the values rolled. This can be removed with a simple safe guard (WHILE LOOP) if neccesary
+    * Issue (resolved) - If Original Burst Time = 1, we can't subtract anything. If we try we get an infinite loop because of my safeguards (can't subtract 0 and Randomizer 
+    *      is based on the Burst Time and can't equal the number entered, so it rerolls infinitly as it can only roll 0's). Unfortunatly, due to how the code is written
+    *      it is extremely difficult to reproduce as it requires at least one of the randomly generated processes to have a Burst = 1, for that process to be entered into the
+    *      ready queue, for that process to be randomly selected to be changed, AND for Check to be odd so it is subtracting. That's a lot of random chance. The fact that I happened
+    *      upon this error within 30 minutes of testing is kinda incredible. I want ot fix it, and I have some ideas to do it, but I'm not sure if they'll work and testing this thing
+    *      (short of building a bogus ready queue full of custom-built Burst = 1 Processes) is gonna be a pain in the ass
+    */
+    public static void MaliciousAttack(ArrayList<Process> attack) {
+        int p = (int)(Math.random()*attack.size());
+        System.out.println("------------------------ Malicious Software Attack ------------------------");
+        System.out.println("Targeting: Process " + p); // testing
+        System.out.println("Original Burst Time: " + attack.get(p).getBurst());
+        int v;
+            
+        int check = (int)(Math.random()*50);
+        //System.out.println("Check: " + check); //testing
+        while(check == 0) {
+            check = (int)(Math.random()*50); // keep rerolling so check is at least 1 (we want to make sure the burst time changes so if we roll a zero, it kinda defeats the point)
+        }
+        //System.out.println("Check value: " + check); // testing
+        if(check % 2 == 1) { // check is an odd number, subtract from burst time
+            // check size of burst time prior to subvtracting so we don't go negative                
+            //System.out.println("Old Burst Time: " + ready.get(p).getBurst()); // testing
+            if(attack.get(p).getBurst() == 1) {
+                v = 0; // ------------------------------------------------------           If we want Burst Time to be reducable to zero, set v = 1 and uncomment v++
+            }                                                               // |           If we don't want Burst Time to be reducible to zero, set v = 0 and comment
+            else {                                                          // | --------- out v++. (if(...) {v=0} is intended to prevent a rare error from occuring. In
+                v = (int)(Math.random()*attack.get(p).getBurst());          // |           the event of the error occuring, the original Burst time and new Burst time
+                //v++; // -----------------------------------------------------|           will both = 1. Error is detailed more in the Variable Documentation above)
+                //System.out.println("first v: " + v); // testing                          
+                while(v == 0) {
+                    v = (int)(Math.random()*attack.get(p).getBurst()); // reroll in the event of rolling a zero
+                }
+            }
+            //System.out.println("final v: " + v); // testing
+            attack.get(p).setBurst(attack.get(p).getBurst() - v); // subtract v from original burst time: (New burst = old burst - [random value that is less than old burst])
+        }
+        else if(check % 2 == 0) { // check is an even number, add to burst time
+            v = (int)(Math.random()*10); // 10 is arbitrary and can be changed, I just thought more than 10 added to Burst time would be kinda insane
+            //System.out.println("First v: " + v); // testing
+            while(v == 0) {
+                v = (int)(Math.random()*10); // reroll in the event of getting a zero
+                }
+            //System.out.println("Final v: " + v); // testing
+            attack.get(p).setBurst(attack.get(p).getBurst() + v); // add v to original Burst time: (New burst = old burst + [random value 1-10])
+        }
+        System.out.println("New burst time: " + attack.get(p).getBurst()); // testing
     }
 }
 /**----------------------------------------------------------------- */
