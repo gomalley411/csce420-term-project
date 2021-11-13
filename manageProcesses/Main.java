@@ -110,17 +110,6 @@ public class Main{
             }
             //-------------------------------------------------------------------------*/
             /**Step 4: The first process in line will get the CPU */
-            
-            // Determine Random Attack
-            int detAttack = (int)(Math.random()*50);
-            if(detAttack >= 40) { // attack
-                if(ready.size() != 0){
-                    MaliciousAttack(ready);
-                }
-            }
-            else if(detAttack < 40){
-                // don't attack
-            }
 
             /**----------------------------------------------------------------- */
             /**Step 5: Run the process in the time quantum.
@@ -291,6 +280,27 @@ public class Main{
                     }
                 }
             }
+            // Malicious Attack and Correction - Alex Miller - Last updated 12/11
+            // In order to fix the malicious attack (or at least detect it) I need the processes I'm attacking to have made it to the
+            // PCB so their state has been saved so it can be compared
+            int determineAttack = (int)(Math.random()*50);
+            if(determineAttack >= 40 && ready.size() != 0) { // attack
+                for(int d = 0; d < pcb.size(); d++) {
+                    if(ready.getFirst().getPid() == pcb.get(d).getPid()) {
+                        MaliciousAttack(ready.getFirst());
+                        // Intercept Attack
+                        if(ready.getFirst().getBurst() != pcb.get(d).getBurst() && ready.getFirst().getPid() == pcb.get(d).getPid()) {
+                            System.out.println("Attack detected in Process " + ready.getFirst().getPid() + ". Correcting...");
+                            ready.getFirst().setBurst(pcb.get(d).getBurst()); // reset Burst in ready to the correct Burst time in PCB
+                            System.out.println("Corrected Burst Time in Process " + ready.getFirst().getPid() + ". Burst Time is now " + ready.getFirst().getBurst());
+                            //System.out.println("Burst Time in corresponding PCB Process: " + pcb.get(d).getBurst());
+                        }
+                    }
+                }
+            }
+            else if(determineAttack < 40){
+                // don't attack
+            }
             /**----------------------------------------------------------------------------------------*/
             /**Waiting Queue: This is where the process will go when it's not finished executing.
              * It will stay in the wait queue
@@ -333,10 +343,9 @@ public class Main{
             System.out.println("Process "+ pcb.get(i).getPid() + " CS: "+ pcb.get(i).getCS());
         }
     }
-        /**Malicious Content - Alex Miller - Last updated 11/12 - Goal: Change the burst time of a process while it's sitting in the readyq then compare it to the Burst time in the pcb (last
+    /**Malicious Content - Alex Miller - Last updated 11/12 - Goal: Change the burst time of a process while it's sitting in the readyq then compare it to the Burst time in the pcb (last
     * saved state) */
     /** Variable documentation
-    * - p: randomly selected process in ready queue. We change the burst time of this selected process (p is the location in ready queue)
     * - check: random int that determines whether we add (check is an even number) or subtract (check is an odd number) from the original burst time for added randomness
     *      note* - check is written with a safe guard (while loop) so it cannot be zero
     * - v: variable that stores the randomly determined value to be added/subtracted from the original Burst time. Neccesary to leave in with a safe guard to make sure the
@@ -349,11 +358,12 @@ public class Main{
     *      upon this error within 30 minutes of testing is kinda incredible. I want ot fix it, and I have some ideas to do it, but I'm not sure if they'll work and testing this thing
     *      (short of building a bogus ready queue full of custom-built Burst = 1 Processes) is gonna be a pain in the ass
     */
-    public static void MaliciousAttack(ArrayList<Process> attack) {
-        int p = (int)(Math.random()*attack.size());
-        System.out.println("------------------------ Malicious Software Attack ------------------------");
-        System.out.println("Targeting: Process " + p); // testing
-        System.out.println("Original Burst Time: " + attack.get(p).getBurst());
+    public static void MaliciousAttack(Process attack) {
+        //int p = (int)(Math.random()*attack.size());
+        System.out.println("Attack in progress");
+        //System.out.println("------------------------ Malicious Software Attack ------------------------");
+        //System.out.println("Targeting: Process " + p); // testing
+        System.out.println("Original Burst Time: " + attack.getBurst());
         int v;
             
         int check = (int)(Math.random()*50);
@@ -365,19 +375,19 @@ public class Main{
         if(check % 2 == 1) { // check is an odd number, subtract from burst time
             // check size of burst time prior to subvtracting so we don't go negative                
             //System.out.println("Old Burst Time: " + ready.get(p).getBurst()); // testing
-            if(attack.get(p).getBurst() == 1) {
+            if(attack.getBurst() == 1) {
                 v = 0; // ------------------------------------------------------           If we want Burst Time to be reducable to zero, set v = 1 and uncomment v++
             }                                                               // |           If we don't want Burst Time to be reducible to zero, set v = 0 and comment
             else {                                                          // | --------- out v++. (if(...) {v=0} is intended to prevent a rare error from occuring. In
-                v = (int)(Math.random()*attack.get(p).getBurst());          // |           the event of the error occuring, the original Burst time and new Burst time
+                v = (int)(Math.random()*attack.getBurst());          // |           the event of the error occuring, the original Burst time and new Burst time
                 //v++; // -----------------------------------------------------|           will both = 1. Error is detailed more in the Variable Documentation above)
                 //System.out.println("first v: " + v); // testing                          
                 while(v == 0) {
-                    v = (int)(Math.random()*attack.get(p).getBurst()); // reroll in the event of rolling a zero
+                    v = (int)(Math.random()*attack.getBurst()); // reroll in the event of rolling a zero
                 }
             }
             //System.out.println("final v: " + v); // testing
-            attack.get(p).setBurst(attack.get(p).getBurst() - v); // subtract v from original burst time: (New burst = old burst - [random value that is less than old burst])
+            attack.setBurst(attack.getBurst() - v); // subtract v from original burst time: (New burst = old burst - [random value that is less than old burst])
         }
         else if(check % 2 == 0) { // check is an even number, add to burst time
             v = (int)(Math.random()*10); // 10 is arbitrary and can be changed, I just thought more than 10 added to Burst time would be kinda insane
@@ -386,9 +396,9 @@ public class Main{
                 v = (int)(Math.random()*10); // reroll in the event of getting a zero
                 }
             //System.out.println("Final v: " + v); // testing
-            attack.get(p).setBurst(attack.get(p).getBurst() + v); // add v to original Burst time: (New burst = old burst + [random value 1-10])
+            attack.setBurst(attack.getBurst() + v); // add v to original Burst time: (New burst = old burst + [random value 1-10])
         }
-        System.out.println("New burst time: " + attack.get(p).getBurst()); // testing
+        System.out.println("New burst time: " + attack.getBurst()); // testing
     }
 }
 /**----------------------------------------------------------------- */
