@@ -84,7 +84,6 @@ public class Main{
             /**------------------------------------------------------------------------------ */
             /**Step 3: Enter the ready queue */
             // get the first qsize amount of processes and add to ready queue
-            // process #qsize+1 should stay in hold
             for (int a = 0; a < qsize && newq.size() != 0; a++) {
                 Process p = newq.get(0);
                 if (ready.size() < qsize) {
@@ -101,7 +100,7 @@ public class Main{
             // either move the head into the running queue (step 5)
             // or enter the waiting queue
 
-            if (ready.size() > 0) {
+            if (ready.size() > 0) { // now we print out the ready queue
                 System.out.println("Ready queue: ");
                 for (int i = 0; i < ready.size(); i++) {
                     System.out.println("Process " + ready.get(i).getPid() + " Pri: " + ready.get(i).getPri() + " B: " + ready.get(i).getBurst() + " IO: " + ready.get(i).getiBurst());
